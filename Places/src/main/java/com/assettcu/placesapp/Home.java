@@ -2,8 +2,10 @@ package com.assettcu.placesapp;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
+import android.net.Uri;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -60,6 +62,10 @@ public class Home extends ActionBarActivity
         mLocationRequest.setFastestInterval(GPS_FASTEST_UPDATE_INTERVAL);
         mLocationClient = new LocationClient(this, this, this);
         mLocationClient.connect();
+
+//        Intent i = new Intent(Intent.ACTION_VIEW,
+//                Uri.parse("google.navigation:q=New+York+NY"));
+//        startActivity(i);
     }
 
     @Override
@@ -76,7 +82,7 @@ public class Home extends ActionBarActivity
                 break;
             // Navigate to Building
             case 1:
-                fragment = new PlaceholderFragment();
+                fragment = new NavigateToBuildingFragment();
                 mTitle = "Navigate";
                 break;
             // Find Nearest Building
