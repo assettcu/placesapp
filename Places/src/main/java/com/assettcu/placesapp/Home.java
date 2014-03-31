@@ -1,35 +1,45 @@
 package com.assettcu.placesapp;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.IntentSender;
+import android.location.Location;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 
 public class Home extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,
+        LocationListener,
+        GooglePlayServicesClient.ConnectionCallbacks,
+        GooglePlayServicesClient.OnConnectionFailedListener {
 
-    /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
+    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+    private final static int GPS_UPDATE_INTERVAL = 10000; // Update every 10 seconds
+    private final static int GPS_FASTEST_UPDATE_INTERVAL = 1000; // Fastest update is 1 second
+
     private NavigationDrawerFragment mNavigationDrawerFragment;
-
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
     private CharSequence mTitle;
+    private LocationRequest mLocationRequest;
+    private LocationClient mLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,20 +51,48 @@ public class Home extends ActionBarActivity
         mTitle = getTitle();
 
         // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
+        mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        mLocationRequest = LocationRequest.create();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(GPS_UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(GPS_FASTEST_UPDATE_INTERVAL);
+        mLocationClient = new LocationClient(this, this, this);
+        mLocationClient.connect();
     }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+        Fragment fragment;
+
+        switch (position)
+        {
+            // Home
+            case 0:
+                fragment = new PlaceholderFragment();
+                mTitle = "Home";
+                break;
+            // Navigate to Building
+            case 1:
+                fragment = new PlaceholderFragment();
+                mTitle = "Navigate";
+                break;
+            // Find Nearest Building
+            case 2:
+                fragment = new NearestBuildingFragment();
+                mTitle = "Find Nearest Building";
+                break;
+            // Default to Nearest Building Fragment
+            default:
+                fragment = new NearestBuildingFragment();
+                break;
+        }
+        fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
     }
 
+    /*
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
@@ -67,7 +105,7 @@ public class Home extends ActionBarActivity
                 mTitle = getString(R.string.title_section3);
                 break;
         }
-    }
+    }*/
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
@@ -102,6 +140,80 @@ public class Home extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /*
+    * Called by Location Services when the request to connect the
+    * client finishes successfully. At this point, you can
+    * request the current location or start periodic updates
+    */
+    @Override
+    public void onConnected(Bundle dataBundle) {
+        mLocationClient.requestLocationUpdates(mLocationRequest, this);
+    }
+
+    /*
+     * Called by Location Services if the connection to the
+     * location client drops because of an error.
+     */
+    @Override
+    public void onDisconnected() { }
+
+    /*
+     * Called by Location Services if the attempt to start Location Services fails.
+     */
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        if (connectionResult.hasResolution()) {
+            try {
+                connectionResult.startResolutionForResult(this, CONNECTION_FAILURE_RESOLUTION_REQUEST);
+            } catch (IntentSender.SendIntentException e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            Toast.makeText(this, connectionResult.getErrorCode(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Define a DialogFragment that displays the error dialog
+    public static class ErrorDialogFragment extends DialogFragment {
+        private Dialog mDialog;
+        public ErrorDialogFragment() {
+            super();
+            mDialog = null;
+        }
+        public void setDialog(Dialog dialog) {
+            mDialog = dialog;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return mDialog;
+        }
+    }
+
+    private boolean servicesConnected() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (ConnectionResult.SUCCESS == resultCode) {
+            return true;
+        } else {
+            Dialog dialog = GooglePlayServicesUtil.getErrorDialog(resultCode, this, 0);
+            if (dialog != null) {
+                ErrorDialogFragment errorFragment = new ErrorDialogFragment();
+                errorFragment.setDialog(dialog);
+                errorFragment.show(getSupportFragmentManager(), "Location Sample");
+            }
+            return false;
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) { }
+
+    // Get the current location. Can be null.
+    public Location getLocation() {
+        return mLocationClient.getLastLocation();
+    }
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -132,15 +244,13 @@ public class Home extends ActionBarActivity
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_home, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(Integer.toString(getArguments().getInt(ARG_SECTION_NUMBER)));
+            textView.setText("Placeholder Fragment");
             return rootView;
         }
 
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
-            ((Home) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
 
