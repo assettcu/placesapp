@@ -61,11 +61,25 @@ public class Home extends ActionBarActivity
         mLocationRequest.setInterval(GPS_UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(GPS_FASTEST_UPDATE_INTERVAL);
         mLocationClient = new LocationClient(this, this, this);
-        mLocationClient.connect();
 
 //        Intent i = new Intent(Intent.ACTION_VIEW,
 //                Uri.parse("google.navigation:q=New+York+NY"));
 //        startActivity(i);
+    }
+
+    @Override
+    protected void onStart() {
+        mLocationClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        if (mLocationClient.isConnected()) {
+            mLocationClient.removeLocationUpdates(this);
+        }
+        mLocationClient.disconnect();
+        super.onStop();
     }
 
     @Override
