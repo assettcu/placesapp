@@ -61,10 +61,6 @@ public class Home extends ActionBarActivity
         mLocationRequest.setInterval(GPS_UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(GPS_FASTEST_UPDATE_INTERVAL);
         mLocationClient = new LocationClient(this, this, this);
-
-//        Intent i = new Intent(Intent.ACTION_VIEW,
-//                Uri.parse("google.navigation:q=New+York+NY"));
-//        startActivity(i);
     }
 
     @Override
@@ -190,7 +186,10 @@ public class Home extends ActionBarActivity
             }
         }
         else {
-            Toast.makeText(this, connectionResult.getErrorCode(), Toast.LENGTH_SHORT).show();
+            int errorCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+            if (errorCode != ConnectionResult.SUCCESS) {
+                GooglePlayServicesUtil.getErrorDialog(errorCode, this, 0).show();
+            }
         }
     }
 
