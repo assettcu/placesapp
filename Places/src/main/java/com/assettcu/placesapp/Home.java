@@ -230,7 +230,12 @@ public class Home extends ActionBarActivity
 
     // Get the current location. Can be null.
     public Location getLocation() {
-        return mLocationClient.getLastLocation();
+        if(mLocationClient.isConnected()){
+            return mLocationClient.getLastLocation();
+        }
+        else {
+            return null;
+        }
     }
 
     /**
