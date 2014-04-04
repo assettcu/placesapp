@@ -38,6 +38,7 @@ public class Home extends ActionBarActivity
     private final static int GPS_UPDATE_INTERVAL = 10000; // Update every 10 seconds
     private final static int GPS_FASTEST_UPDATE_INTERVAL = 1000; // Fastest update is 1 second
 
+    private NavigationHelper navigationHelper;
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
     private LocationRequest mLocationRequest;
@@ -45,6 +46,9 @@ public class Home extends ActionBarActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        navigationHelper = new NavigationHelper();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
@@ -61,6 +65,8 @@ public class Home extends ActionBarActivity
         mLocationRequest.setInterval(GPS_UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(GPS_FASTEST_UPDATE_INTERVAL);
         mLocationClient = new LocationClient(this, this, this);
+
+
     }
 
     @Override
@@ -83,28 +89,42 @@ public class Home extends ActionBarActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment;
 
-        switch (position)
+        if(position <= navigationHelper.getNumSupportedFragments())
         {
-            // Home
-            case 0:
-                fragment = new PlaceholderFragment();
-                mTitle = "Home";
-                break;
-            // Navigate to Building
-            case 1:
-                fragment = new NavigateToBuildingFragment();
-                mTitle = "Navigate";
-                break;
-            // Find Nearest Building
-            case 2:
-                fragment = new NearestBuildingFragment();
-                mTitle = "Find Nearest Building";
-                break;
-            // Default to Nearest Building Fragment
-            default:
-                fragment = new NearestBuildingFragment();
-                break;
+            //Go to the supported fragment
+            fragment = navigationHelper.getFragmentAtPosition(position);
+            mTitle = navigationHelper.getTitleAtPosition(position);
         }
+        else
+        {
+            //Go to the home fragment by default
+            fragment = navigationHelper.getFragmentAtPosition(0);
+            mTitle = navigationHelper.getTitleAtPosition(0);
+        }
+
+//        switch (position)
+//        {
+//            // Home
+//            case 0:
+//                fragment = new PlaceholderFragment();
+//                mTitle = "Home";
+//                break;
+//            // Navigate to Building
+//            case 1:
+//                fragment = new NavigateToBuildingFragment();
+//                mTitle = "Navigate";
+//                break;
+//            // Find Nearest Building
+//            case 2:
+//                fragment = new NearestBuildingFragment();
+//                mTitle = "Find Nearest Building";
+//                break;
+//            // Default to Nearest Building Fragment
+//            default:
+//                fragment = new NearestBuildingFragment();
+//                break;
+//        }
+
         fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
     }
 
@@ -275,6 +295,39 @@ public class Home extends ActionBarActivity
         @Override
         public void onAttach(Activity activity) {
             super.onAttach(activity);
+        }
+    }
+
+    public class NavigationHelper
+    {
+        private final static int NUM_SUPPORTED_FRAGMENTS = 3;
+        private Fragment fragmentArray[] = new Fragment[NUM_SUPPORTED_FRAGMENTS];
+        private CharSequence titleArray[] = new String[NUM_SUPPORTED_FRAGMENTS];
+
+        public NavigationHelper()
+        {
+            fragmentArray[0] = new PlaceholderFragment();
+            fragmentArray[1] = new NavigateToBuildingFragment();
+            fragmentArray[2] = new NearestBuildingFragment();
+
+            titleArray[0] = getString(R.string.title_section1);
+            titleArray[1] = getString(R.string.title_section2);
+            titleArray[2] = getString(R.string.title_section3);
+        }
+
+        public Fragment getFragmentAtPosition(int i)
+        {
+            return fragmentArray[i];
+        }
+
+        public CharSequence getTitleAtPosition(int i)
+        {
+            return titleArray[i];
+        }
+
+        public int getNumSupportedFragments()
+        {
+            return NUM_SUPPORTED_FRAGMENTS - 1;
         }
     }
 
