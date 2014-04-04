@@ -3,7 +3,7 @@ placesapp
 
 The Places Mobile App for Android OS
 
-Compatable with Android 2.1 (SDK 7) and up thanks to the use of v4 Support Library and v7 Appcompat Library enabling the ability to bring Fragments, Action Bar, and Navigation Drawer to Android 2.1+.
+Compatable with Android 2.3 (SDK 9) and up thanks to the use of v4 Support Library and v7 Appcompat Library enabling the ability to bring Fragments, Action Bar, and Navigation Drawer to Android 2.1+.
 
 
 Feature | Guide
