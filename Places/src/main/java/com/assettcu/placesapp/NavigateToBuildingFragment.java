@@ -6,6 +6,7 @@ package com.assettcu.placesapp;
  * created: 3/31/14.
  */
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 
 public class NavigateToBuildingFragment extends ListFragment {
 
+    private ProgressDialog progress;
     ArrayAdapter<String> adapter;
     ArrayList<String> buildings;
     JSONArray json;
@@ -35,6 +37,11 @@ public class NavigateToBuildingFragment extends ListFragment {
         buildings = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(inflater.getContext(), android.R.layout.simple_list_item_1, buildings);
         setListAdapter(adapter);
+
+        progress = new ProgressDialog(getActivity());
+        progress.setTitle("Please wait");
+        progress.setMessage("Loading Buildings...");
+        progress.show();
 
         new RetrieveJSON().execute("http://places.colorado.edu/api/buildings");
 
@@ -88,6 +95,7 @@ public class NavigateToBuildingFragment extends ListFragment {
 
         protected void onPostExecute(JSONArray json) {
             readJSON(json);
+            progress.dismiss();
         }
     }
 }
