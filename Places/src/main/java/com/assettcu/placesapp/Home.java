@@ -91,7 +91,7 @@ public class Home extends ActionBarActivity
         {
             //Go to the home fragment by default
             fragment = navigationHelper.getFragmentAtPosition(0);
-            mTitle = navigationHelper.getTitleAtPosition(0);
+            mTitle = navigationHelper.getTitleAtPosition(position);
         }
 
         fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();

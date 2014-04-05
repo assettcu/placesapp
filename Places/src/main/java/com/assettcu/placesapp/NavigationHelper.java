@@ -10,8 +10,8 @@ import android.support.v4.app.Fragment;
 public class NavigationHelper
 {
     private final static int NUM_SUPPORTED_FRAGMENTS = 3;
-    private Fragment fragmentArray[] = new Fragment[NUM_SUPPORTED_FRAGMENTS];
-    private CharSequence titleArray[] = new CharSequence[NUM_SUPPORTED_FRAGMENTS];
+    private Fragment fragmentArray[] = new Fragment[10];
+    private CharSequence titleArray[] = new CharSequence[10];
 
     public NavigationHelper(Activity parent)
     {
@@ -22,6 +22,9 @@ public class NavigationHelper
         titleArray[0] = parent.getString(R.string.title_section1);
         titleArray[1] = parent.getString(R.string.title_section2);
         titleArray[2] = parent.getString(R.string.title_section3);
+        titleArray[3] = parent.getString(R.string.title_section4);
+        titleArray[4] = parent.getString(R.string.title_section5);
+        titleArray[5] = parent.getString(R.string.title_section6);
     }
 
     public Fragment getFragmentAtPosition(int i)
