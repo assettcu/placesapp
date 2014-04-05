@@ -1,25 +1,17 @@
 package com.assettcu.placesapp;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
-import android.net.Uri;
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -47,7 +39,7 @@ public class Home extends ActionBarActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        navigationHelper = new NavigationHelper();
+        navigationHelper = new NavigationHelper(this);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
@@ -101,29 +93,6 @@ public class Home extends ActionBarActivity
             fragment = navigationHelper.getFragmentAtPosition(0);
             mTitle = navigationHelper.getTitleAtPosition(0);
         }
-
-//        switch (position)
-//        {
-//            // Home
-//            case 0:
-//                fragment = new PlaceholderFragment();
-//                mTitle = "Home";
-//                break;
-//            // Navigate to Building
-//            case 1:
-//                fragment = new NavigateToBuildingFragment();
-//                mTitle = "Navigate";
-//                break;
-//            // Find Nearest Building
-//            case 2:
-//                fragment = new NearestBuildingFragment();
-//                mTitle = "Find Nearest Building";
-//                break;
-//            // Default to Nearest Building Fragment
-//            default:
-//                fragment = new NearestBuildingFragment();
-//                break;
-//        }
 
         fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
     }
@@ -255,79 +224,6 @@ public class Home extends ActionBarActivity
         }
         else {
             return null;
-        }
-    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText("Placeholder Fragment");
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-        }
-    }
-
-    public class NavigationHelper
-    {
-        private final static int NUM_SUPPORTED_FRAGMENTS = 3;
-        private Fragment fragmentArray[] = new Fragment[NUM_SUPPORTED_FRAGMENTS];
-        private CharSequence titleArray[] = new String[NUM_SUPPORTED_FRAGMENTS];
-
-        public NavigationHelper()
-        {
-            fragmentArray[0] = new PlaceholderFragment();
-            fragmentArray[1] = new NavigateToBuildingFragment();
-            fragmentArray[2] = new NearestBuildingFragment();
-
-            titleArray[0] = getString(R.string.title_section1);
-            titleArray[1] = getString(R.string.title_section2);
-            titleArray[2] = getString(R.string.title_section3);
-        }
-
-        public Fragment getFragmentAtPosition(int i)
-        {
-            return fragmentArray[i];
-        }
-
-        public CharSequence getTitleAtPosition(int i)
-        {
-            return titleArray[i];
-        }
-
-        public int getNumSupportedFragments()
-        {
-            return NUM_SUPPORTED_FRAGMENTS - 1;
         }
     }
 
