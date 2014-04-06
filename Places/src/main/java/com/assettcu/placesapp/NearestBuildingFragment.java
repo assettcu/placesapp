@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -45,7 +46,7 @@ public class NearestBuildingFragment extends Fragment {
     }
 
     public Location getLocation() {
-        return ((Home) getActivity()).getLocation();
+        return ((HomeActivity) getActivity()).getLocation();
     }
 
     public void readJSON(JSONArray json) throws JSONException {
