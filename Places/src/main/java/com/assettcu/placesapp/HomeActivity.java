@@ -20,7 +20,7 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 
-public class Home extends ActionBarActivity
+public class HomeActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         LocationListener,
         GooglePlayServicesClient.ConnectionCallbacks,
