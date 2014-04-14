@@ -29,8 +29,6 @@ public class NearestBuildingFragment extends Fragment {
     private ProgressDialog progress;
     private TextView textView;
     private ImageView imageView;
-    private Location location;
-    private JSONArray json;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,8 +48,6 @@ public class NearestBuildingFragment extends Fragment {
     }
 
     public void readJSON(JSONArray json) throws JSONException {
-        this.json = json;
-
         // Change image URL to give us the thumbnail URL and get it
         String path = json.getJSONObject(0).getString("path").replace("/images", "/images/thumbs");
         new DownloadImageTask(imageView).execute("http://places.colorado.edu" + path);
@@ -66,7 +62,6 @@ public class NearestBuildingFragment extends Fragment {
         protected JSONArray doInBackground(Void... urls) {
             Location gps;
             int waited = 0;
-
             gps = getLocation();
 
             // If the location service is working

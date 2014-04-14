@@ -94,7 +94,9 @@ public class NavigateToBuildingFragment extends ListFragment {
         }
 
         protected void onPostExecute(JSONArray json) {
-            readJSON(json);
+            if(json != null) {
+                readJSON(json);
+            }
             progress.dismiss();
         }
     }

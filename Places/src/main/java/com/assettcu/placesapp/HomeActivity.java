@@ -1,6 +1,8 @@
 package com.assettcu.placesapp;
 
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.os.Bundle;
@@ -12,19 +14,27 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationStatusCodes;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,
         LocationListener,
         GooglePlayServicesClient.ConnectionCallbacks,
-        GooglePlayServicesClient.OnConnectionFailedListener {
+        GooglePlayServicesClient.OnConnectionFailedListener,
+        LocationClient.OnAddGeofencesResultListener,
+        LocationClient.OnRemoveGeofencesResultListener {
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private final static int GPS_UPDATE_INTERVAL = 10000; // Update every 10 seconds
@@ -35,6 +45,10 @@ public class HomeActivity extends ActionBarActivity
     private CharSequence mTitle;
     private LocationRequest mLocationRequest;
     private LocationClient mLocationClient;
+
+    PendingIntent pendIntent;
+    Intent intent;
+    List<String> places;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,13 +66,16 @@ public class HomeActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
+        places = new ArrayList<String>();
+
+
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(GPS_UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(GPS_FASTEST_UPDATE_INTERVAL);
         mLocationClient = new LocationClient(this, this, this);
 
-
+        //mGeofenceList = new ArrayList<Geofence>();
     }
 
     @Override
@@ -70,6 +87,10 @@ public class HomeActivity extends ActionBarActivity
     @Override
     protected void onStop() {
         if (mLocationClient.isConnected()) {
+            // Make sure geofences are removed if application exits
+            if(pendIntent != null) {
+                mLocationClient.removeGeofences(pendIntent, this);
+            }
             mLocationClient.removeLocationUpdates(this);
         }
         mLocationClient.disconnect();
@@ -97,21 +118,6 @@ public class HomeActivity extends ActionBarActivity
         fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
     }
 
-    /*
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
-    }*/
-
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -138,11 +144,38 @@ public class HomeActivity extends ActionBarActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        return item.getItemId() == R.id.action_settings || super.onOptionsItemSelected(item);
+    }
+
+    public void makeToast(String toast) {
+        Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
+    }
+
+    public void addGeofences(List<Geofence> mGeofenceList) {
+        if(mLocationClient.isConnected()) {
+            intent = new Intent(this, ReceiveTransitionsIntentService.class);
+            pendIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            mLocationClient.addGeofences(mGeofenceList, pendIntent, this);
         }
-        return super.onOptionsItemSelected(item);
+    }
+
+    public void removeGeofences() {
+        if(mLocationClient.isConnected() && pendIntent != null) {
+            mLocationClient.removeGeofences(pendIntent, this);
+        }
+    }
+
+    @Override
+    public void onRemoveGeofencesByRequestIdsResult(int i, String[] strings) {}
+
+    @Override
+    public void onRemoveGeofencesByPendingIntentResult(int statusCode,PendingIntent requestIntent) {
+        if (statusCode == LocationStatusCodes.SUCCESS) {
+            makeToast("Removed all Geofences");
+        }
+        else {
+            makeToast("Failed to remove Geofences");
+        }
     }
 
     /*
@@ -182,6 +215,16 @@ public class HomeActivity extends ActionBarActivity
         }
     }
 
+    @Override
+    public void onAddGeofencesResult(int i, String[] strings) {
+        if (LocationStatusCodes.SUCCESS == i) {
+            Toast.makeText(this, "Added " + strings.length + " Geofences", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            Toast.makeText(this, "Failed to add Geofences", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     // Define a DialogFragment that displays the error dialog
     public static class ErrorDialogFragment extends DialogFragment {
         private Dialog mDialog;
@@ -217,7 +260,7 @@ public class HomeActivity extends ActionBarActivity
     @Override
     public void onLocationChanged(Location location) { }
 
-    // Get the current location. Can be null.
+    // Get the current location. Can return null.
     public Location getLocation() {
         if(mLocationClient.isConnected()){
             return mLocationClient.getLastLocation();
