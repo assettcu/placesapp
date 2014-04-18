@@ -1,4 +1,4 @@
-package com.assettcu.placesapp;
+package com.assettcu.placesapp.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,6 +14,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.assettcu.placesapp.R;
 
 import java.util.ArrayList;
 

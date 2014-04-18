@@ -16,6 +16,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.assettcu.placesapp.fragments.NavigationDrawerFragment;
+import com.assettcu.placesapp.helpers.NavigationHelper;
+import com.assettcu.placesapp.helpers.ReceiveTransitionsIntentService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -37,7 +40,7 @@ public class HomeActivity extends ActionBarActivity
         LocationClient.OnRemoveGeofencesResultListener {
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
-    private final static int GPS_UPDATE_INTERVAL = 10000; // Update every 10 seconds
+    private final static int GPS_UPDATE_INTERVAL = 5000; // Update every 10 seconds
     private final static int GPS_FASTEST_UPDATE_INTERVAL = 1000; // Fastest update is 1 second
 
     private NavigationHelper navigationHelper;
@@ -74,8 +77,6 @@ public class HomeActivity extends ActionBarActivity
         mLocationRequest.setInterval(GPS_UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(GPS_FASTEST_UPDATE_INTERVAL);
         mLocationClient = new LocationClient(this, this, this);
-
-        //mGeofenceList = new ArrayList<Geofence>();
     }
 
     @Override

@@ -4,7 +4,7 @@
  * created: 4/14/2014.
  */
 
-package com.assettcu.placesapp;
+package com.assettcu.placesapp.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -14,16 +14,27 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.assettcu.placesapp.adapters.CustomAdapter;
+import com.assettcu.placesapp.HomeActivity;
+import com.assettcu.placesapp.helpers.JsonRequest;
+import com.assettcu.placesapp.R;
+import com.assettcu.placesapp.models.Place;
 import com.google.android.gms.location.Geofence;
 
 import org.json.JSONArray;
@@ -33,11 +44,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WhereAmIFragment extends ListFragment {
+public class WhereAmIFragment extends Fragment {
 
     private ProgressDialog progress;
-    private ArrayAdapter<String> adapter;
-    private List<String> buildings;
+    private ArrayAdapter<Place> adapter;
+    private List<Place> places;
+
+    private ListView listView;
 
     private BroadcastReceiver receiver;
     private Geofence geofence;
@@ -45,9 +58,13 @@ public class WhereAmIFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        buildings = new ArrayList<String>();
-        adapter = new ArrayAdapter<String>(inflater.getContext(), android.R.layout.simple_list_item_1, buildings);
-        setListAdapter(adapter);
+
+        View view = inflater.inflate(R.layout.fragment_where_am_i, container, false);
+        listView = (ListView) view.findViewById(R.id.list_view);
+
+        places = new ArrayList<Place>();
+        adapter = new CustomAdapter(inflater.getContext());
+        listView.setAdapter(adapter);
 
         progress = new ProgressDialog(getActivity());
         progress.setTitle("Please wait");
@@ -67,16 +84,26 @@ public class WhereAmIFragment extends ListFragment {
                     if(triggerIds != null && triggerIds.length > 0) {
                         if (transitionType == Geofence.GEOFENCE_TRANSITION_ENTER) {
                             for(String trigger : triggerIds) {
-                                adapter.add(trigger);
+                                for(Place p : places) {
+                                    Log.d("Places", "'" + p.getPlacename() + "'   '" + trigger + "'");
+                                    if(p.getPlacename().equals(trigger)) {
+                                        adapter.add(p);
+
+                                        // Debug toast to see what geofences were entered
+                                        Toast.makeText(getActivity(), "Entered: "
+                                                + TextUtils.join(", ", triggerIds), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
                             }
 
-                            // Debug toast to see what geofences were entered
-                            Toast.makeText(getActivity(), "Entered: "
-                                    + TextUtils.join(", ", triggerIds), Toast.LENGTH_SHORT).show();
+
                         }
                         else if (transitionType == Geofence.GEOFENCE_TRANSITION_EXIT) {
                             for(String trigger : triggerIds) {
-                                adapter.remove(trigger);
+                                for(Place p : places) {
+                                    if(p.getPlacename().equals(trigger))
+                                        adapter.remove(p);
+                                }
                             }
 
                             // Debug toast to see what geofences were exited
@@ -91,14 +118,10 @@ public class WhereAmIFragment extends ListFragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
                 new IntentFilter("geofenceEvent"));
 
-        // Test Geofences located near ASSETT
-        addGeofence("Assett E295",         40.013847, -105.250449, 10);
-        addGeofence("Assett Second Floor", 40.013803, -105.250443, 30);
-        addGeofence("Assett Bus Stop",     40.013708, -105.250771, 15);
-
+        addTestGeofences();
         new getBuildingsList().execute();
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return view;
     }
 
     @Override
@@ -113,14 +136,56 @@ public class WhereAmIFragment extends ListFragment {
         super.onStop();
     }
 
+    public void addTestGeofences() {
+        // Test Geofences located near ASSETT for testing purposes
+        addGeofence("Assett E295",         40.013847, -105.250449, 20);
+        addGeofence("Assett Second Floor", 40.013803, -105.250443, 30);
+        addGeofence("Assett Bus Stop",     40.013708, -105.250771, 20);
+
+        places.add(new Place(1003, "Assett E295", "ASET",
+                "http://media.defenceindustrydaily.com/images/AIR_C-295MP_Chile_Concept_lg.jpg"));
+
+        places.add(new Place(1001, "Assett Second Floor", "ASET",
+                "http://www.portlandcompany.com/images/rooms/building2secondfloor_2.jpg"));
+
+        places.add(new Place(1002, "Assett Bus Stop", "ASET",
+                "http://www.zombiezodiac.com/rob/ped/busstop/keio_bus_stop.JPG"));
+    }
+
     public void readJSON(JSONArray json) throws JSONException {
+        AnimationSet set = new AnimationSet(true);
+        Animation animation = new AlphaAnimation(0.0f, 1.0f);
+        animation.setDuration(300);
+        set.addAnimation(animation);
+
+        animation = new TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0.5f,Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f
+        );
+
+        animation.setDuration(300);
+        set.addAnimation(animation);
+
+        LayoutAnimationController controller = new LayoutAnimationController(set, 0.5f);
+        //ListView listView = getListView();
+        listView.setLayoutAnimation(controller);
+
+
         JSONObject building;
+        Place place;
         for(int i = 0; i < json.length(); i++) {
             building = json.getJSONObject(i);
             addGeofence(building.getString("placename"),
                     Double.valueOf(building.getString("latitude")),
                     Double.valueOf(building.getString("longitude")),
                     100);
+
+            place = new Place();
+            place.setPlaceid(building.getInt("placeid"));
+            place.setPlacename(building.getString("placename"));
+            place.setBuilding_code(building.getString("building_code"));
+            place.setImage_url(building.getString("path"));
+            places.add(place);
         }
 
         Activity parent = getActivity();

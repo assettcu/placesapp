@@ -1,4 +1,4 @@
-package com.assettcu.placesapp;
+package com.assettcu.placesapp.fragments;
 
 /**
  * Created by Aaron on 4/5/2014.
@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.assettcu.placesapp.R;
 
 /**
  * A placeholder fragment containing a simple view.

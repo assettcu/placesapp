@@ -1,4 +1,4 @@
-package com.assettcu.placesapp;
+package com.assettcu.placesapp.helpers;
 
 /**
  * Created by: Derek Baumgartner

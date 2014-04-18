@@ -4,13 +4,12 @@
     <string name="app_name">Places</string>
     <string name="title_section1">Home</string>
     <string name="title_section2">Navigate to Building</string>
-    <string name="title_section3">Find Nearest Building</string>
-    <string name="title_section4">I Need...</string>
-    <string name="title_section5">Where Am I?</string>
-    <string name="title_section6">My Classes</string>
+    <string name="title_section3">I Need...</string>
+    <string name="title_section4">My Classes</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
     <string name="i_need_fragment_text">I Need...</string>
+    <string name="where_am_i_title">Nearby Places</string>
 
 </resources>

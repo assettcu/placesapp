@@ -6,4 +6,4 @@
     android:divider="@android:color/transparent"
     android:dividerHeight="0dp"
     android:background="#111"
-    tools:context="com.assettcu.placesapp.NavigationDrawerFragment" />
+    tools:context="com.assettcu.placesapp.fragments.NavigationDrawerFragment" />

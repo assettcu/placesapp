@@ -1,4 +1,4 @@
-package com.assettcu.placesapp;
+package com.assettcu.placesapp.helpers;
 
 /**
  * file: ReceiveTransitionsIntentService
@@ -49,7 +49,7 @@ public class ReceiveTransitionsIntentService extends IntentService {
             LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast);
 
             Vibrator v = (Vibrator) this.getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-            v.vibrate(new long[]{0,100,50,100}, -1);
+            v.vibrate(80);
         }
     }
 }
