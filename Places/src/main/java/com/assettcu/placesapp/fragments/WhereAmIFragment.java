@@ -22,7 +22,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -49,17 +48,17 @@ import java.util.List;
 
 public class WhereAmIFragment extends Fragment {
 
+    public static final boolean createTestGeofences = false;  // Create Test ASSETT geofences
+
     private ProgressDialog progress;
     private ArrayAdapter<Place> adapter;
     private List<Place> places;
     private Place nearestBuilding;                // Manual building if use is not in any geofences
-    private boolean createTestGeofences = true;  // Create Test ASSETT geofences
 
     private ListView listView;
     private TextView outOfRangeTextView;
 
     private BroadcastReceiver receiver;
-    private Geofence geofence;
     private List<Geofence> mGeofenceList;
 
     @Override
@@ -226,7 +225,7 @@ public class WhereAmIFragment extends Fragment {
             double distance = Double.parseDouble(json.getJSONObject(0).getString("distance"));
 
             // If building is less than 0.125 miles (~200 meters) from user
-            if (distance < 5.125) {
+            if (distance < 0.125) {
                 String buildingName = json.getJSONObject(0).getString("placename");
 
                 // Find building from list of places and add it to the listview adapter
@@ -244,6 +243,7 @@ public class WhereAmIFragment extends Fragment {
     }
 
     public void addGeofence(String id, double latitude, double longitude, float radius){
+        Geofence geofence;
         geofence = new Geofence.Builder()
                 .setRequestId(id)              // Set name of building
                 .setTransitionTypes(1 | 2)     // Entered and Exited transitions
