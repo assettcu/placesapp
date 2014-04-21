@@ -12,6 +12,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -28,6 +30,7 @@ import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.assettcu.placesapp.adapters.CustomAdapter;
@@ -49,8 +52,11 @@ public class WhereAmIFragment extends Fragment {
     private ProgressDialog progress;
     private ArrayAdapter<Place> adapter;
     private List<Place> places;
+    private Place nearestBuilding;                // Manual building if use is not in any geofences
+    private boolean createTestGeofences = true;  // Create Test ASSETT geofences
 
     private ListView listView;
+    private TextView outOfRangeTextView;
 
     private BroadcastReceiver receiver;
     private Geofence geofence;
@@ -61,6 +67,8 @@ public class WhereAmIFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_where_am_i, container, false);
         listView = (ListView) view.findViewById(R.id.list_view);
+        outOfRangeTextView = (TextView) view.findViewById(R.id.outofrange);
+        listView.setEmptyView(outOfRangeTextView);
 
         places = new ArrayList<Place>();
         adapter = new CustomAdapter(inflater.getContext());
@@ -83,16 +91,25 @@ public class WhereAmIFragment extends Fragment {
 
                     if(triggerIds != null && triggerIds.length > 0) {
                         if (transitionType == Geofence.GEOFENCE_TRANSITION_ENTER) {
+                            if(progress.isShowing())
+                                progress.dismiss();
+
+                            if(nearestBuilding != null){
+                                adapter.remove(nearestBuilding);
+                                nearestBuilding = null;
+                            }
+
                             for(String trigger : triggerIds) {
                                 for(Place p : places) {
-                                    Log.d("Places", "'" + p.getPlacename() + "'   '" + trigger + "'");
                                     if(p.getPlacename().equals(trigger)) {
                                         adapter.add(p);
+                                        Log.d("Places", p.getPlacename() + ": " + p.getImage_url());
 
                                         // Debug toast to see what geofences were entered
                                         Toast.makeText(getActivity(), "Entered: "
                                                 + TextUtils.join(", ", triggerIds), Toast.LENGTH_SHORT).show();
                                     }
+
                                 }
                             }
 
@@ -104,6 +121,11 @@ public class WhereAmIFragment extends Fragment {
                                     if(p.getPlacename().equals(trigger))
                                         adapter.remove(p);
                                 }
+                            }
+
+                            // If the user isn't in any geofences, we calculate the nearest one
+                            if(adapter.getCount() == 0) {
+                                new GetNearestBuildingsTask().execute();
                             }
 
                             // Debug toast to see what geofences were exited
@@ -118,7 +140,9 @@ public class WhereAmIFragment extends Fragment {
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(receiver,
                 new IntentFilter("geofenceEvent"));
 
-        addTestGeofences();
+        if(createTestGeofences)
+            addTestGeofences();
+
         new getBuildingsList().execute();
 
         return view;
@@ -138,6 +162,7 @@ public class WhereAmIFragment extends Fragment {
 
     public void addTestGeofences() {
         // Test Geofences located near ASSETT for testing purposes
+
         addGeofence("Assett E295",         40.013847, -105.250449, 20);
         addGeofence("Assett Second Floor", 40.013803, -105.250443, 30);
         addGeofence("Assett Bus Stop",     40.013708, -105.250771, 20);
@@ -152,7 +177,7 @@ public class WhereAmIFragment extends Fragment {
                 "http://www.zombiezodiac.com/rob/ped/busstop/keio_bus_stop.JPG"));
     }
 
-    public void readJSON(JSONArray json) throws JSONException {
+    public void readBuildingsJSON(JSONArray json) throws JSONException {
         AnimationSet set = new AnimationSet(true);
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(300);
@@ -167,9 +192,7 @@ public class WhereAmIFragment extends Fragment {
         set.addAnimation(animation);
 
         LayoutAnimationController controller = new LayoutAnimationController(set, 0.5f);
-        //ListView listView = getListView();
         listView.setLayoutAnimation(controller);
-
 
         JSONObject building;
         Place place;
@@ -184,13 +207,39 @@ public class WhereAmIFragment extends Fragment {
             place.setPlaceid(building.getInt("placeid"));
             place.setPlacename(building.getString("placename"));
             place.setBuilding_code(building.getString("building_code"));
-            place.setImage_url(building.getString("path"));
+            place.setImage_url("http://places.colorado.edu" + building.getString("path"));
             places.add(place);
         }
 
         Activity parent = getActivity();
         if(parent instanceof HomeActivity) {
             ((HomeActivity) parent).addGeofences(mGeofenceList);
+        }
+
+        // Start Task to find nearest building
+        new GetNearestBuildingsTask().execute();
+    }
+
+    public void readNearestBuildingJSON(JSONArray json) throws JSONException {
+        // Make sure adapter still doesn't have any geofences
+        if(adapter.getCount() == 0) {
+            double distance = Double.parseDouble(json.getJSONObject(0).getString("distance"));
+
+            // If building is less than 0.125 miles (~200 meters) from user
+            if (distance < 5.125) {
+                String buildingName = json.getJSONObject(0).getString("placename");
+
+                // Find building from list of places and add it to the listview adapter
+                for (Place p : places) {
+                    if (p.getPlacename().equals(buildingName)) {
+                        adapter.add(p);
+                        nearestBuilding = p;
+                        Toast.makeText(getActivity(), "Manually Added: " + buildingName, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            if(progress.isShowing())
+                progress.dismiss();
         }
     }
 
@@ -202,6 +251,10 @@ public class WhereAmIFragment extends Fragment {
                 .setExpirationDuration(600000) // 10 minute expiration time
                 .build();
         mGeofenceList.add(geofence);
+    }
+
+    public Location getLocation() {
+        return ((HomeActivity) getActivity()).getLocation();
     }
 
     private class getBuildingsList extends AsyncTask<Void, Void, JSONArray> {
@@ -218,7 +271,7 @@ public class WhereAmIFragment extends Fragment {
         protected void onPostExecute(JSONArray json) {
             if (json != null) {
                 try {
-                    readJSON(json);
+                    readBuildingsJSON(json);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -226,7 +279,60 @@ public class WhereAmIFragment extends Fragment {
             else {
                 Toast.makeText(getActivity(), "Error getting building list", Toast.LENGTH_SHORT).show();
             }
-            progress.dismiss();
+        }
+    }
+
+    // Manually get nearest building using GPS coorindates and Places API
+    class GetNearestBuildingsTask extends AsyncTask<Void, Void, JSONArray> {
+        protected JSONArray doInBackground(Void... urls) {
+            Location gps;
+            int waited = 0;
+            gps = getLocation();
+
+            // If the location service is working
+            if (gps != null) {
+                // While the GPS accuracy is worse than 25 meters and the user has
+                // waited less than 20 seconds (40 * 500ms) for a GPS lock
+                while ((gps = getLocation()).getAccuracy() > 25 && waited < 40) {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    waited++;
+                }
+            } else {
+                return null;
+            }
+
+            // If after getting a GPS fix, the user still isn't detected in any geofences
+            if (adapter.getCount() == 0)
+            {
+                try {
+                    return JsonRequest.getJson("http://places.colorado.edu/api/nearestbuildings/?latitude=" +
+                            gps.getLatitude() + "&longitude=" + gps.getLongitude() + "&limit=3");
+                } catch (Exception e) {
+                    Log.d("JSON", e.toString());
+                    return null;
+                }
+            }
+            // If the user is in a geofence, there's no reason to get the nearest building
+            else
+            {
+                return null;
+            }
+        }
+
+        protected void onPostExecute(JSONArray json) {
+            if(json != null)
+            {
+                try {
+                    readNearestBuildingJSON(json);
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

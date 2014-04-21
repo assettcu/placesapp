@@ -11,5 +11,6 @@
     <string name="action_settings">Settings</string>
     <string name="i_need_fragment_text">I Need...</string>
     <string name="where_am_i_title">Nearby Places</string>
+    <string name="out_of_range">You are out of range of the University</string>
 
 </resources>
