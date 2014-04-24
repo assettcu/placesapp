@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.assettcu.placesapp.fragments.BuildingDisplayFragment;
 import com.assettcu.placesapp.fragments.NavigationDrawerFragment;
 import com.assettcu.placesapp.helpers.NavigationHelper;
 import com.assettcu.placesapp.helpers.ReceiveTransitionsIntentService;
@@ -37,7 +39,8 @@ public class HomeActivity extends ActionBarActivity
         GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener,
         LocationClient.OnAddGeofencesResultListener,
-        LocationClient.OnRemoveGeofencesResultListener {
+        LocationClient.OnRemoveGeofencesResultListener,
+        BuildingDisplayFragment.OnFragmentInteractionListener {
 
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private final static int GPS_UPDATE_INTERVAL = 5000; // Update every 10 seconds
@@ -224,6 +227,22 @@ public class HomeActivity extends ActionBarActivity
         else {
             Toast.makeText(this, "Failed to add Geofences", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onFragmentInteraction(String lat, String lon)
+    {
+        double latitude = Double.parseDouble(lat);
+        double longitude = Double.parseDouble(lon);
+        Toast.makeText(this, latitude + "," + longitude, Toast.LENGTH_LONG).show();
+        //Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + latitude + "," + longitude));
+        Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(
+                "http://maps.google.com/maps?daddr=" + latitude + "," + longitude + "&dirflg=w"));
+        startActivity(i);
+
+//        Toast.makeText(this, "building :" + buildings.get(position),
+//                Toast.LENGTH_LONG).show();
+
     }
 
     // Define a DialogFragment that displays the error dialog

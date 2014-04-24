@@ -29,8 +29,6 @@ public class NeedFragment extends Fragment
 {
 
     private GridView gridView;
-    private ArrayAdapter adapter;
-    private ArrayList<String> needs;
 
     // references to our images
     public Integer[] mThumbIds =
@@ -100,7 +98,6 @@ public class NeedFragment extends Fragment
     {
         private Context mContext;
 
-
         public ImageAdapter(Context c)
         {
             mContext = c;
@@ -131,8 +128,8 @@ public class NeedFragment extends Fragment
             {  // if it's not recycled, initialize some attributes
                 gridView = new View(mContext);
 
-                // get layout from grid_item
-                gridView = inflater.inflate(R.layout.grid_item, null);
+                // get layout from adapter_grid_item
+                gridView = inflater.inflate(R.layout.adapter_grid_item, null);
 
                 TextView textView = (TextView) gridView.findViewById(R.id.grid_item_label);
                 ImageView imageView = (ImageView) gridView.findViewById(R.id.grid_item_image);
@@ -140,10 +137,6 @@ public class NeedFragment extends Fragment
                 textView.setText(mThumbTitles[position]);
                 imageView.setImageResource(mThumbIds[position]);
 
-//                imageView = new ImageView(mContext);
-//                imageView.setLayoutParams(new GridView.LayoutParams(85, 85));
-//                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-//                imageView.setPadding(8, 8, 8, 8);
             } else
             {
                 gridView = (View) convertView;

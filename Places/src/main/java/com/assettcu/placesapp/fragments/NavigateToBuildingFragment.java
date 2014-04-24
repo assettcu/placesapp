@@ -7,10 +7,9 @@ package com.assettcu.placesapp.fragments;
  */
 
 import android.app.ProgressDialog;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,12 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import com.assettcu.placesapp.R;
 import com.assettcu.placesapp.helpers.JsonRequest;
+import com.assettcu.placesapp.models.Place;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -33,11 +34,13 @@ public class NavigateToBuildingFragment extends ListFragment {
     ArrayAdapter<String> adapter;
     ArrayList<String> buildings;
     JSONArray json;
+    ArrayList<Place> places;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         buildings = new ArrayList<String>();
         adapter = new ArrayAdapter<String>(inflater.getContext(), android.R.layout.simple_list_item_1, buildings);
+        places = new ArrayList<Place>();
         setListAdapter(adapter);
 
         progress = new ProgressDialog(getActivity());
@@ -51,24 +54,21 @@ public class NavigateToBuildingFragment extends ListFragment {
     }
 
     @Override
-    public void onListItemClick(ListView listView, View view, int position, long id) {
+    public void onListItemClick(ListView listView, View view, int position, long id)
+    {
         super.onListItemClick(listView, view, position, id);
 
-        try {
-            double latitude = json.getJSONObject(position).getDouble("latitude");
-            double longitude = json.getJSONObject(position).getDouble("longitude");
-            Toast.makeText(getActivity(), latitude + "," + longitude, Toast.LENGTH_LONG).show();
-            //Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + latitude + "," + longitude));
-            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(
-                    "http://maps.google.com/maps?daddr=" + latitude + "," + longitude + "&dirflg=w"));
-            startActivity(i);
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Place place = places.get(position);
+        BuildingDisplayFragment fragment = BuildingDisplayFragment.newInstance(place.getPlacename(), place.getImage_url(),
+                                                                               place.getLatitude(), place.getLongitude());
 
-        Toast.makeText(getActivity(), "building :" + buildings.get(position),
-                Toast.LENGTH_LONG).show();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+        fragmentManager.beginTransaction()
+                       .replace(R.id.container, fragment)
+                       .addToBackStack(null)
+                       .commit();
+
     }
 
     public void readJSON(JSONArray json) {
@@ -76,8 +76,25 @@ public class NavigateToBuildingFragment extends ListFragment {
 
         for (int i = 0; i < json.length(); i++) {
             try {
-                adapter.add(json.getJSONObject(i).getString("building_code") + " - " +
-                        json.getJSONObject(i).getString("placename"));
+                JSONObject jsonObject = json.getJSONObject(i);
+                String buildingCode = jsonObject.getString("building_code");
+                String placeName = jsonObject.getString("placename");
+                int placeId = jsonObject.getInt("placeid");
+                String path = jsonObject.getString("path");
+                String lat = jsonObject.getString("latitude");
+                String lon = jsonObject.getString("longitude");
+
+                adapter.add(buildingCode + " - " + placeName);
+
+                Place place = new Place();
+                place.setPlaceid(placeId);
+                place.setPlacename(placeName);
+                place.setBuilding_code(buildingCode);
+                place.setImage_url("http://places.colorado.edu" + path);
+                place.setLatitude(lat);
+                place.setLongitude(lon);
+                places.add(place);
+
                 Log.d("JSON", json.getJSONObject(i).getString("placename"));
             } catch (JSONException e) {
                 Log.d("JSON", e.toString());

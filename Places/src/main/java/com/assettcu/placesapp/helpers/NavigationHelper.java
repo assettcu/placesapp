@@ -11,6 +11,7 @@ import com.assettcu.placesapp.fragments.WhereAmIFragment;
 
 /**
  * Created by Aaron on 4/5/2014.
+ * Models and provides output to the navigation drawer.
  */
 
 public class NavigationHelper
@@ -30,6 +31,7 @@ public class NavigationHelper
         titleArray[1] = parent.getString(R.string.title_section2);
         titleArray[2] = parent.getString(R.string.title_section3);
         titleArray[3] = parent.getString(R.string.title_section4);
+
     }
 
     public Fragment getFragmentAtPosition(int i)

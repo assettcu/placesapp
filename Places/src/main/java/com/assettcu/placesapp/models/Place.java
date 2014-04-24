@@ -10,6 +10,9 @@ public class Place {
     private String placename;
     private String building_code;
     private String image_url;
+    private String latitude;
+    private String longitude;
+
 
     public Place() {}
 
@@ -18,6 +21,28 @@ public class Place {
         this.placename = placename;
         this.building_code = building_code;
         this.image_url = image_url;
+    }
+
+    //Latitude
+    public String getLatitude()
+    {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude)
+    {
+        this.latitude = latitude;
+    }
+
+    //Longitude
+    public String getLongitude()
+    {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude)
+    {
+        this.longitude = longitude;
     }
 
     // Place ID
