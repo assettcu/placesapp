@@ -16,6 +16,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,6 +28,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -72,6 +74,8 @@ public class WhereAmIFragment extends Fragment {
         places = new ArrayList<Place>();
         adapter = new CustomAdapter(inflater.getContext());
         listView.setAdapter(adapter);
+
+        setOnClickAdapter();
 
         progress = new ProgressDialog(getActivity());
         progress.setTitle("Please wait");
@@ -147,6 +151,24 @@ public class WhereAmIFragment extends Fragment {
         return view;
     }
 
+    public void setOnClickAdapter(){
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Place place = adapter.getItem(position);
+                BuildingDisplayFragment fragment = BuildingDisplayFragment.newInstance(place.getPlacename(), place.getImage_url(),
+                        place.getLatitude(), place.getLongitude());
+
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+                fragmentManager.beginTransaction()
+                        .replace(R.id.container, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+    }
+
     @Override
     public void onStop() {
         LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(receiver);
@@ -200,7 +222,7 @@ public class WhereAmIFragment extends Fragment {
             addGeofence(building.getString("placename"),
                     Double.valueOf(building.getString("latitude")),
                     Double.valueOf(building.getString("longitude")),
-                    100);
+                    150);
 
             place = new Place();
             place.setPlaceid(building.getInt("placeid"));
