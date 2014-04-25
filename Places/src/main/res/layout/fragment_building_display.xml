@@ -1,46 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp"
-        android:background="@drawable/card"
-        android:weightSum="1">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@drawable/card">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:text="Building Name"
-        android:textSize="25sp"
-        android:id="@+id/building_name"
-        android:layout_gravity="center_horizontal|left"
-        android:layout_margin="10dp"/>
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_width="match_parent">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="#707070"
+            style="@android:style/TextAppearance.Large"
+            android:id="@+id/building_name"
+            android:layout_weight="1"
+            android:layout_margin="10dp"/>
+
+        <View
+            android:layout_width="1dip"
+            android:layout_height="fill_parent"
+            android:layout_margin="5dp"
+            android:background="#e5e5e5"
+            />
+
+        <ImageButton
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingRight="5dp"
+            android:background="@null"
+            android:src="@drawable/ic_action_directions"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#e5e5e5"/>
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:src="@drawable/printer"
-        android:id="@+id/building_image"
-        android:layout_weight="0.89"/>
-
-    <Button
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/button"
-        android:text="Navigate"
-        android:layout_gravity="center_horizontal"
-        />
+        android:layout_margin="10dp"
+        android:scaleType="fitStart"
+        android:adjustViewBounds="true"
+        android:src="@drawable/printer"
+        android:id="@+id/building_image"/>
 
     <ExpandableListView
-        android:layout_width="wrap_content"
-        android:layout_height="168dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/expandableListView"
-        android:dividerHeight="2dp"
+        android:dividerHeight="1dp"
         android:headerDividersEnabled="false"
         android:footerDividersEnabled="false"
-        android:layout_weight="0.10"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginBottom="5dp"/>
 
 </LinearLayout>

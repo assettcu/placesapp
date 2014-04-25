@@ -11,6 +11,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -109,7 +110,7 @@ public class BuildingDisplayFragment extends Fragment
 
         buildingText.setText(mBuildingName);
 
-        Button button = (Button) view.findViewById(R.id.button);
+        ImageButton button = (ImageButton) view.findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener()
         {
             @Override

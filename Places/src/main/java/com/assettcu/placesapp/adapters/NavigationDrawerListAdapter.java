@@ -24,10 +24,16 @@ public class NavigationDrawerListAdapter extends BaseAdapter
 
     private Integer[] iconArray =
             {
-                R.drawable.home_icon_3,
-                R.drawable.navigate_to_building_icon,
-                R.drawable.need_icon,
-                R.drawable.my_classes_icon_2
+                    // Icon placeholders until we find better ones
+                    android.R.drawable.ic_menu_mylocation,
+                    android.R.drawable.ic_menu_directions,
+                    android.R.drawable.ic_menu_info_details,
+                    android.R.drawable.ic_menu_agenda
+
+               // R.drawable.home_icon_3,
+               // R.drawable.navigate_to_building_icon,
+               // R.drawable.need_icon,
+               // R.drawable.my_classes_icon_2
             };
 
     public NavigationDrawerListAdapter(Context c)
