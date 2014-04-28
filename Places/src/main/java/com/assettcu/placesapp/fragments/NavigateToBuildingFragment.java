@@ -21,6 +21,11 @@ import android.widget.ListView;
 import com.assettcu.placesapp.R;
 import com.assettcu.placesapp.helpers.JsonRequest;
 import com.assettcu.placesapp.models.Place;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,7 +38,7 @@ public class NavigateToBuildingFragment extends ListFragment {
     private ProgressDialog progress;
     ArrayAdapter<String> adapter;
     ArrayList<String> buildings;
-    JSONArray json;
+    JsonArray json;
     ArrayList<Place> places;
 
     @Override
@@ -43,12 +48,27 @@ public class NavigateToBuildingFragment extends ListFragment {
         places = new ArrayList<Place>();
         setListAdapter(adapter);
 
-        progress = new ProgressDialog(getActivity());
-        progress.setTitle("Please wait");
-        progress.setMessage("Loading Buildings...");
-        progress.show();
 
-        new RetrieveJSON().execute("http://places.colorado.edu/api/buildings");
+
+        if(json == null) {
+            progress = new ProgressDialog(getActivity());
+            progress.setTitle("Please wait");
+            progress.setMessage("Loading Buildings...");
+            progress.show();
+            Ion.with(inflater.getContext()).load("http://places.colorado.edu/api/buildings").asJsonArray()
+                    .setCallback(new FutureCallback<JsonArray>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonArray result) {
+                            progress.hide();
+                            readJSON(result);
+                        }
+                    });
+        }
+        else
+        {
+            readJSON(json);
+        }
+        //new RetrieveJSON().execute("http://places.colorado.edu/api/buildings");
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -71,18 +91,17 @@ public class NavigateToBuildingFragment extends ListFragment {
 
     }
 
-    public void readJSON(JSONArray json) {
+    public void readJSON(JsonArray json) {
         this.json = json;
 
-        for (int i = 0; i < json.length(); i++) {
-            try {
-                JSONObject jsonObject = json.getJSONObject(i);
-                String buildingCode = jsonObject.getString("building_code");
-                String placeName = jsonObject.getString("placename");
-                int placeId = jsonObject.getInt("placeid");
-                String path = jsonObject.getString("path");
-                String lat = jsonObject.getString("latitude");
-                String lon = jsonObject.getString("longitude");
+        for (int i = 0; i < json.size(); i++) {
+                JsonObject jsonObject = json.get(i).getAsJsonObject();
+                String buildingCode = jsonObject.get("building_code").getAsString();
+                String placeName = jsonObject.get("placename").getAsString();
+                int placeId = jsonObject.get("placeid").getAsInt();
+                String path = jsonObject.get("path").getAsString();
+                String lat = jsonObject.get("latitude").getAsString();
+                String lon = jsonObject.get("longitude").getAsString();
 
                 adapter.add(buildingCode + " - " + placeName);
 
@@ -95,10 +114,7 @@ public class NavigateToBuildingFragment extends ListFragment {
                 place.setLongitude(lon);
                 places.add(place);
 
-                Log.d("JSON", json.getJSONObject(i).getString("placename"));
-            } catch (JSONException e) {
-                Log.d("JSON", e.toString());
-            }
+                //Log.d("JSON", json.getJSONObject(i).getString("placename"));
         }
     }
 
@@ -114,7 +130,7 @@ public class NavigateToBuildingFragment extends ListFragment {
 
         protected void onPostExecute(JSONArray json) {
             if(json != null) {
-                readJSON(json);
+               // readJSON(json);
             }
             progress.dismiss();
         }

@@ -43,14 +43,23 @@
         android:layout_height="1dp"
         android:background="#e5e5e5"/>
 
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:visibility="visible"/>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:src="@drawable/printer"
+        android:id="@+id/building_image"
         android:scaleType="fitStart"
         android:adjustViewBounds="true"
-        android:src="@drawable/printer"
-        android:id="@+id/building_image"/>
+        android:visibility="gone"/>
 
     <ExpandableListView
         android:layout_width="match_parent"
