@@ -5,5 +5,5 @@
     android:choiceMode="singleChoice"
     android:divider="#cfb87c"
     android:dividerHeight="0dp"
-    android:background="#111"
+    android:background="@color/android:black"
     tools:context="com.assettcu.placesapp.fragments.NavigationDrawerFragment" />

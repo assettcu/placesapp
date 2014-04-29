@@ -35,10 +35,10 @@ public class CustomAdapter extends ArrayAdapter<Place> {
 
         Place place = getItem(position);
         TextView name = (TextView) convertView.findViewById(R.id.text_view);
-        name.setText(place.getPlacename());
+        name.setText(place.getPlaceName());
 
         ImageView placeImage = (ImageView) convertView.findViewById(R.id.icon);
-        UrlImageViewHelper.setUrlDrawable(placeImage, place.getImage_url(), null, new UrlImageViewCallback() {
+        UrlImageViewHelper.setUrlDrawable(placeImage, place.getImageURL(), null, new UrlImageViewCallback() {
             @Override
             public void onLoaded(ImageView imageView, Bitmap loadedBitmap, String url, boolean loadedFromCache) {
                 if (!loadedFromCache) {

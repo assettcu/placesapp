@@ -1,26 +1,29 @@
 package com.assettcu.placesapp.models;
 
+import java.io.Serializable;
+
 /**
  * file: Place
  * by: Derek Baumgartner
  * created: 4/18/2014.
  */
-public class Place {
-    private int placeid;
-    private String placename;
-    private String building_code;
-    private String image_url;
+public class Place implements Serializable
+{
+    private int placeID;
+    private String placeName;
+    private String buildingCode;
+    private String imageURL;
     private String latitude;
     private String longitude;
 
 
     public Place() {}
 
-    public Place(int placeid, String placename, String building_code, String image_url){
-        this.placeid = placeid;
-        this.placename = placename;
-        this.building_code = building_code;
-        this.image_url = image_url;
+    public Place(int placeId, String placeName, String buildingCode, String imageURL){
+        this.placeID = placeId;
+        this.placeName = placeName;
+        this.buildingCode = buildingCode;
+        this.imageURL = imageURL;
     }
 
     //Latitude
@@ -46,38 +49,38 @@ public class Place {
     }
 
     // Place ID
-    public int getPlaceid(){
-        return this.placeid;
+    public int getPlaceID(){
+        return this.placeID;
     }
 
-    public void setPlaceid(int placeid){
-        this.placeid = placeid;
+    public void setPlaceID(int placeID){
+        this.placeID = placeID;
     }
 
     // Place Name
-    public String getPlacename(){
-        return this.placename;
+    public String getPlaceName(){
+        return this.placeName;
     }
 
-    public void setPlacename(String placename){
-        this.placename = placename;
+    public void setPlaceName(String placeName){
+        this.placeName = placeName;
     }
 
     // Building Code
     public String getBuildingCode(){
-        return this.building_code;
+        return this.buildingCode;
     }
 
-    public void setBuilding_code(String building_code){
-        this.building_code = building_code;
+    public void setBuildingCode(String buildingCode){
+        this.buildingCode = buildingCode;
     }
 
     // Image URL
-    public String getImage_url(){
-        return this.image_url;
+    public String getImageURL(){
+        return this.imageURL;
     }
 
-    public void setImage_url(String image_url){
-        this.image_url = image_url;
+    public void setImageURL(String image_url){
+        this.imageURL = image_url;
     }
 }

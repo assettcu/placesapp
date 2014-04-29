@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.assettcu.placesapp.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Aaron on 4/24/2014.
@@ -17,28 +18,21 @@ import java.util.ArrayList;
  */
 public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
 {
-    private ArrayList<ArrayList<String>> groups;
-    private ArrayList<String> groupNames;
+    private HashMap<Integer, String[]> groups;
+    private HashMap<Integer, String> groupNames;
     private LayoutInflater inflater;
 
     public BuildingDisplayListAdapter(Activity activity)
     {
-        groups = new ArrayList<ArrayList<String>>();
-        groupNames = new ArrayList<String>();
+        groups = new HashMap<Integer, String[]>();
+        groupNames = new HashMap<Integer, String>();
         inflater = activity.getLayoutInflater();
     }
 
     public void addDataToGroup(int groupPosition, String[] values, String groupName)
     {
-        ArrayList<String> data = new ArrayList<String>();
-
-        for(String string : values)
-        {
-            data.add(string);
-        }
-
-        groups.add(groupPosition, data);
-        groupNames.add(groupPosition, groupName);
+        groups.put(groupPosition, values);
+        groupNames.put(groupPosition, groupName);
     }
 
     @Override
@@ -50,7 +44,7 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
     @Override
     public int getChildrenCount(int groupPosition)
     {
-        return groups.get(groupPosition).size();
+        return groups.get(groupPosition).length;
     }
 
     @Override
@@ -92,7 +86,11 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
 
             TextView text = (TextView) convertView.findViewById(R.id.group_row_text);
             text.setText(groupNames.get(groupPosition));
-
+        }
+        else
+        {
+            TextView text = (TextView) convertView.findViewById(R.id.group_row_text);
+            text.setText(groupNames.get(groupPosition));
         }
 
         return convertView;
@@ -107,7 +105,12 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
             convertView = inflater.inflate(R.layout.adapter_child_row, null);
 
             TextView text = (TextView) convertView.findViewById(R.id.child_row_text);
-            text.setText(groups.get(groupPosition).get(childPosition));
+            text.setText(groups.get(groupPosition)[childPosition]);
+        }
+        else
+        {
+            TextView text = (TextView) convertView.findViewById(R.id.child_row_text);
+            text.setText(groups.get(groupPosition)[childPosition]);
         }
 
         return convertView;

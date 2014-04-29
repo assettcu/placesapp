@@ -98,16 +98,6 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
-//        mDrawerListView.setAdapter(new ArrayAdapter<String>(
-//                getActionBar().getThemedContext(),
-//                android.R.layout.simple_list_item_1,
-//                android.R.id.text1,
-//                new String[]{
-//                        getString(R.string.title_section1),
-//                        getString(R.string.title_section2),
-//                        getString(R.string.title_section3),
-//                        getString(R.string.title_section4)
-//                }));
 
         mDrawerListView.setAdapter(new NavigationDrawerListAdapter(this.getActivity()));
 //
@@ -194,7 +184,7 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void selectItem(int position) {
-        mCurrentSelectedPosition = position;
+
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
         }
@@ -204,6 +194,8 @@ public class NavigationDrawerFragment extends Fragment {
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
+
+        mCurrentSelectedPosition = position;
     }
 
     @Override

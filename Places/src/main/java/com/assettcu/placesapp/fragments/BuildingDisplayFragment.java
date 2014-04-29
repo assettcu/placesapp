@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,16 +18,12 @@ import android.widget.TextView;
 
 import com.assettcu.placesapp.R;
 import com.assettcu.placesapp.adapters.BuildingDisplayListAdapter;
-import com.koushikdutta.async.future.Future;
+import com.assettcu.placesapp.models.Place;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.ProgressCallback;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewCallback;
 import com.koushikdutta.urlimageviewhelper.UrlImageViewHelper;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URLEncoder;
 
 /**
  * Takes in information from the Place that is selected in the
@@ -36,15 +31,9 @@ import java.net.URLEncoder;
  */
 public class BuildingDisplayFragment extends Fragment
 {
-    private static final String ARG_BUILDING_NAME = "building_name";
-    private static final String ARG_BUILDING_URL = "building_url";
-    private static final String ARG_LATITUDE = "latitude";
-    private static final String ARG_LONGITUDE = "longitude";
+    private static final String ARG_PLACE = "place_key";
 
-    private String mBuildingName;
-    private String mBuildingURL;
-    private String mLatitude;
-    private String mLongitude;
+    private Place mPlace;
 
     private OnFragmentInteractionListener mListener;
     private BuildingDisplayListAdapter buildingInfo;
@@ -53,20 +42,14 @@ public class BuildingDisplayFragment extends Fragment
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param building_name Name of the building.
-     * @param building_url  URL of the image for the building.
-     * @param lat Latitude of the building.
-     * @param lon Longitude of the building.
+     * @param place The Place to display.
      * @return A new instance of fragment BuildingDisplayFragment.
      */
-    public static BuildingDisplayFragment newInstance(String building_name, String building_url, String lat, String lon)
+    public static BuildingDisplayFragment newInstance(Place place)
     {
         BuildingDisplayFragment fragment = new BuildingDisplayFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_BUILDING_NAME, building_name);
-        args.putString(ARG_BUILDING_URL, building_url);
-        args.putString(ARG_LATITUDE, lat);
-        args.putString(ARG_LONGITUDE, lon);
+        args.putSerializable(ARG_PLACE, place);
         fragment.setArguments(args);
 
         return fragment;
@@ -83,10 +66,7 @@ public class BuildingDisplayFragment extends Fragment
         super.onCreate(savedInstanceState);
         if (getArguments() != null)
         {
-            mBuildingName = getArguments().getString(ARG_BUILDING_NAME);
-            mBuildingURL = getArguments().getString(ARG_BUILDING_URL);
-            mLatitude = getArguments().getString(ARG_LATITUDE);
-            mLongitude = getArguments().getString(ARG_LONGITUDE);
+           mPlace = (Place) getArguments().getSerializable(ARG_PLACE);
         }
     }
 
@@ -103,6 +83,7 @@ public class BuildingDisplayFragment extends Fragment
         animation.setDuration(300);
 
         // Load thumbnails instead of full images
+        String mBuildingURL = mPlace.getImageURL();
         mBuildingURL = mBuildingURL.replace("/images", "/images/thumbs");
 
         Ion.with(inflater.getContext(), mBuildingURL)
@@ -120,15 +101,17 @@ public class BuildingDisplayFragment extends Fragment
                 .animateLoad(animation)
                 .animateIn(animation)
                 .intoImageView(buildingImage)
-                .setCallback(new FutureCallback<ImageView>() {
+                .setCallback(new FutureCallback<ImageView>()
+                {
                     @Override
-                    public void onCompleted(Exception e, ImageView result) {
+                    public void onCompleted(Exception e, ImageView result)
+                    {
                         progressBar.setVisibility(View.GONE);
                         buildingImage.setVisibility(View.VISIBLE);
                     }
                 });
 
-        buildingText.setText(mBuildingName);
+        buildingText.setText(mPlace.getPlaceName());
 
         ImageButton button = (ImageButton) view.findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener()
@@ -156,7 +139,7 @@ public class BuildingDisplayFragment extends Fragment
     {
         if (mListener != null)
         {
-            mListener.onFragmentInteraction(mLatitude, mLongitude);
+            mListener.onFragmentInteraction(mPlace.getLatitude(), mPlace.getLongitude());
         }
     }
 

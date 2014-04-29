@@ -79,8 +79,7 @@ public class NavigateToBuildingFragment extends ListFragment {
         super.onListItemClick(listView, view, position, id);
 
         Place place = places.get(position);
-        BuildingDisplayFragment fragment = BuildingDisplayFragment.newInstance(place.getPlacename(), place.getImage_url(),
-                                                                               place.getLatitude(), place.getLongitude());
+        BuildingDisplayFragment fragment = BuildingDisplayFragment.newInstance(place);
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
@@ -106,10 +105,10 @@ public class NavigateToBuildingFragment extends ListFragment {
                 adapter.add(buildingCode + " - " + placeName);
 
                 Place place = new Place();
-                place.setPlaceid(placeId);
-                place.setPlacename(placeName);
-                place.setBuilding_code(buildingCode);
-                place.setImage_url("http://places.colorado.edu" + path);
+                place.setPlaceID(placeId);
+                place.setPlaceName(placeName);
+                place.setBuildingCode(buildingCode);
+                place.setImageURL("http://places.colorado.edu" + path);
                 place.setLatitude(lat);
                 place.setLongitude(lon);
                 places.add(place);

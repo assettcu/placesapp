@@ -104,9 +104,9 @@ public class WhereAmIFragment extends Fragment {
 
                             for(String trigger : triggerIds) {
                                 for(Place p : places) {
-                                    if(p.getPlacename().equals(trigger)) {
+                                    if(p.getPlaceName().equals(trigger)) {
                                         adapter.add(p);
-                                        Log.d("Places", p.getPlacename() + ": " + p.getImage_url());
+                                        Log.d("Places", p.getPlaceName() + ": " + p.getImageURL());
 
                                         // Debug toast to see what geofences were entered
                                         Toast.makeText(getActivity(), "Entered: "
@@ -121,7 +121,7 @@ public class WhereAmIFragment extends Fragment {
                         else if (transitionType == Geofence.GEOFENCE_TRANSITION_EXIT) {
                             for(String trigger : triggerIds) {
                                 for(Place p : places) {
-                                    if(p.getPlacename().equals(trigger))
+                                    if(p.getPlaceName().equals(trigger))
                                         adapter.remove(p);
                                 }
                             }
@@ -156,8 +156,7 @@ public class WhereAmIFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Place place = adapter.getItem(position);
-                BuildingDisplayFragment fragment = BuildingDisplayFragment.newInstance(place.getPlacename(), place.getImage_url(),
-                        place.getLatitude(), place.getLongitude());
+                BuildingDisplayFragment fragment = BuildingDisplayFragment.newInstance(place);
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
@@ -225,10 +224,10 @@ public class WhereAmIFragment extends Fragment {
                     150);
 
             place = new Place();
-            place.setPlaceid(building.getInt("placeid"));
-            place.setPlacename(building.getString("placename"));
-            place.setBuilding_code(building.getString("building_code"));
-            place.setImage_url("http://places.colorado.edu" + building.getString("path"));
+            place.setPlaceID(building.getInt("placeid"));
+            place.setPlaceName(building.getString("placename"));
+            place.setBuildingCode(building.getString("building_code"));
+            place.setImageURL("http://places.colorado.edu" + building.getString("path"));
             places.add(place);
         }
 
@@ -252,7 +251,7 @@ public class WhereAmIFragment extends Fragment {
 
                 // Find building from list of places and add it to the listview adapter
                 for (Place p : places) {
-                    if (p.getPlacename().equals(buildingName)) {
+                    if (p.getPlaceName().equals(buildingName)) {
                         adapter.add(p);
                         nearestBuilding = p;
                         Toast.makeText(getActivity(), "Manually Added: " + buildingName, Toast.LENGTH_SHORT).show();
