@@ -22,15 +22,6 @@ public class NavigationDrawerListAdapter extends BaseAdapter
     private Context mContext;
     private NavigationHelper navHelper;
 
-    private Integer[] iconArray =
-            {
-                // Icon placeholders until we find better ones
-                android.R.drawable.ic_menu_mylocation,
-                android.R.drawable.ic_menu_directions,
-                android.R.drawable.ic_menu_info_details,
-                android.R.drawable.ic_menu_agenda
-            };
-
     public NavigationDrawerListAdapter(Context c)
     {
         mContext = c;
@@ -39,7 +30,7 @@ public class NavigationDrawerListAdapter extends BaseAdapter
 
     public int getCount()
     {
-        return iconArray.length;
+        return navHelper.getNumSupportedFragments() + 1;
     }
 
     public Object getItem(int position)
@@ -70,7 +61,7 @@ public class NavigationDrawerListAdapter extends BaseAdapter
             ImageView imageView = (ImageView) navListView.findViewById(R.id.drawer_item_image);
 
             textView.setText(navHelper.getTitleAtPosition(position));
-            imageView.setImageResource(iconArray[position]);
+            imageView.setImageResource(navHelper.getIconAtPosition(position));
 
         } else
         {

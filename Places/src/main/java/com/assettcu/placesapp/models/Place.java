@@ -16,7 +16,6 @@ public class Place implements Serializable
     private String latitude;
     private String longitude;
 
-
     public Place() {}
 
     public Place(int placeId, String placeName, String buildingCode, String imageURL){
