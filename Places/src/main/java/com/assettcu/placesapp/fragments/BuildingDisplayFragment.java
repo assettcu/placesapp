@@ -3,6 +3,7 @@ package com.assettcu.placesapp.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,13 @@ import android.widget.TextView;
 import com.assettcu.placesapp.R;
 import com.assettcu.placesapp.adapters.BuildingDisplayListAdapter;
 import com.assettcu.placesapp.models.Place;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.ProgressCallback;
+
+import org.json.JSONObject;
 
 /**
  * Takes in information from the Place that is selected in the
@@ -33,6 +38,7 @@ public class BuildingDisplayFragment extends Fragment
 
     private OnFragmentInteractionListener mListener;
     private BuildingDisplayListAdapter buildingInfo;
+    private ExpandableListView expandableListView;
 
     /**
      * Use this factory method to create a new instance of
@@ -82,6 +88,7 @@ public class BuildingDisplayFragment extends Fragment
         String mBuildingURL = mPlace.getImageURL();
         mBuildingURL = mBuildingURL.replace("/images", "/images/thumbs");
 
+        // Get Building Image
         Ion.with(inflater.getContext(), mBuildingURL)
                 .progressBar(progressBar)
                 .progress(new ProgressCallback() {
@@ -107,6 +114,15 @@ public class BuildingDisplayFragment extends Fragment
                     }
                 });
 
+        // Get Building Metadata
+        Ion.with(inflater.getContext()).load("http://places.colorado.edu/api/place/?id=" + mPlace.getPlaceID()).asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        readMetadataJson(result);
+                    }
+                });
+
         buildingText.setText(mPlace.getPlaceName());
 
         ImageButton button = (ImageButton) view.findViewById(R.id.button);
@@ -122,13 +138,18 @@ public class BuildingDisplayFragment extends Fragment
         buildingInfo = new BuildingDisplayListAdapter(getActivity());
 
         buildingInfo.addDataToGroup(0, new String[] {"Test1", "Test2"}, "Information");
-        buildingInfo.addDataToGroup(1, new String[] {"Test1", "Test2"}, "Printers");
         buildingInfo.addDataToGroup(2, new String[] {"Test1", "Test2"}, "Classrooms");
 
-        ExpandableListView expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
+        expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
         expandableListView.setAdapter(buildingInfo);
 
         return view;
+    }
+
+    public void readMetadataJson(JsonObject json) {
+        JsonObject metadata = json.get("metadata").getAsJsonObject();
+        buildingInfo.addDataToGroup(1,metadata.get("printers").getAsString().split(","), "Printers");
+        buildingInfo.notifyDataSetChanged();
     }
 
     public void navigate()
