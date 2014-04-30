@@ -262,16 +262,19 @@ public class WhereAmIFragment extends Fragment {
 
     public void getNearestBuildingJson() {
         Location gpsLocation = getLocation();
-        Ion.with(this.getActivity()).load(
-                "http://places.colorado.edu/api/nearestbuildings/?latitude=" +
-                        gpsLocation.getLatitude() + "&longitude=" +
-                        gpsLocation.getLongitude() + "&limit=1").asJsonArray()
-                .setCallback(new FutureCallback<JsonArray>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonArray result) {
-                        readNearestBuildingJson(result);
-                    }
-                });
+        if(gpsLocation != null) {
+            Ion.with(this.getActivity()).load(
+                    "http://places.colorado.edu/api/nearestbuildings/?latitude=" +
+                            gpsLocation.getLatitude() + "&longitude=" +
+                            gpsLocation.getLongitude() + "&limit=1"
+            ).asJsonArray()
+                    .setCallback(new FutureCallback<JsonArray>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonArray result) {
+                            readNearestBuildingJson(result);
+                        }
+                    });
+        }
     }
 
     public void readNearestBuildingJson(JsonArray json) {
