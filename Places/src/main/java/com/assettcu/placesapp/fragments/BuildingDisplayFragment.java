@@ -140,7 +140,6 @@ public class BuildingDisplayFragment extends Fragment
 
         buildingInfo = new BuildingDisplayListAdapter(getActivity());
 
-        buildingInfo.addDataToGroup(0, new String[]{"Test1", "Test2"}, "Information");
         buildingInfo.addDataToGroup(1, new String[] {"Test1", "Test2"}, "Printers");
         expandableListView.setAdapter(buildingInfo);
 
@@ -160,8 +159,16 @@ public class BuildingDisplayFragment extends Fragment
 
 
     public void readMetadataJson(JsonObject json) {
-        JsonArray classroomsJsonArray = json.get("classrooms").getAsJsonArray();
+        JsonObject metadata = json.get("metadata").getAsJsonObject();
+        buildingInfo.addDataToGroup(0, new String[]{
+                "Building Code: " + metadata.get("building_code").getAsString(),
+                "Building Proctor: " + metadata.get("building_proctor").getAsString()
 
+        }, "Information");
+
+
+
+        JsonArray classroomsJsonArray = json.get("classrooms").getAsJsonArray();
         String[] classrooms = new String[classroomsJsonArray.size()];
         for(int i = 0; i < classroomsJsonArray.size(); i++) {
             String room = classroomsJsonArray.get(i).getAsJsonObject().get("placename").getAsString();

@@ -5,12 +5,13 @@
               android:layout_height="wrap_content">
 
     <TextView android:id="@+id/child_row_text"
-              android:paddingLeft="50dp"
-              android:paddingTop="5dp"
+              android:paddingLeft="30dp"
+              android:paddingTop="8dp"
+              android:paddingBottom="8dp"
               android:focusable="false"
-              android:textSize="15sp"
-              android:textStyle="normal"
+              android:textColor="#707070"
+              style="@android:style/TextAppearance.Medium"
               android:layout_width="match_parent"
-              android:layout_height="30dp"/>
+              android:layout_height="wrap_content"/>
 
 </LinearLayout>
