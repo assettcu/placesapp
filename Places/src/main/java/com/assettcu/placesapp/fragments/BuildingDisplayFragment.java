@@ -77,9 +77,13 @@ public class BuildingDisplayFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_building_display, container, false);
 
-        final ImageView buildingImage = (ImageView) view.findViewById(R.id.building_image);
+
+
+        expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
+        expandableListView.addHeaderView(inflater.inflate(R.layout.image_holder, null, false));
         TextView buildingText = (TextView) view.findViewById(R.id.building_name);
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
+        final ImageView buildingImage = (ImageView) view.findViewById(R.id.building_image);
 
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(300);
@@ -138,17 +142,25 @@ public class BuildingDisplayFragment extends Fragment
         buildingInfo = new BuildingDisplayListAdapter(getActivity());
 
         buildingInfo.addDataToGroup(0, new String[] {"Test1", "Test2"}, "Information");
-        buildingInfo.addDataToGroup(2, new String[] {"Test1", "Test2"}, "Classrooms");
+        buildingInfo.addDataToGroup(1, new String[] {"Test1", "Test2"}, "Printers");
 
-        expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
+
         expandableListView.setAdapter(buildingInfo);
+
 
         return view;
     }
 
     public void readMetadataJson(JsonObject json) {
-        JsonObject metadata = json.get("metadata").getAsJsonObject();
-        buildingInfo.addDataToGroup(1,metadata.get("printers").getAsString().split(","), "Printers");
+        JsonArray classroomsJsonArray = json.get("classrooms").getAsJsonArray();
+
+        String[] classrooms = new String[classroomsJsonArray.size()];
+        for(int i = 0; i < classroomsJsonArray.size(); i++) {
+            String room = classroomsJsonArray.get(i).getAsJsonObject().get("placename").getAsString();
+            classrooms[i] = room;
+            Log.d("Assett", room);
+        }
+        buildingInfo.addDataToGroup(2, classrooms, "Classrooms (" + classrooms.length + ")");
         buildingInfo.notifyDataSetChanged();
     }
 
