@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.assettcu.placesapp.R;
 import com.assettcu.placesapp.adapters.BuildingDisplayListAdapter;
@@ -77,8 +78,6 @@ public class BuildingDisplayFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_building_display, container, false);
 
-
-
         expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
         expandableListView.addHeaderView(inflater.inflate(R.layout.image_holder, null, false));
         TextView buildingText = (TextView) view.findViewById(R.id.building_name);
@@ -141,15 +140,24 @@ public class BuildingDisplayFragment extends Fragment
 
         buildingInfo = new BuildingDisplayListAdapter(getActivity());
 
-        buildingInfo.addDataToGroup(0, new String[] {"Test1", "Test2"}, "Information");
+        buildingInfo.addDataToGroup(0, new String[]{"Test1", "Test2"}, "Information");
         buildingInfo.addDataToGroup(1, new String[] {"Test1", "Test2"}, "Printers");
-
-
         expandableListView.setAdapter(buildingInfo);
+
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,int groupPosition, int childPosition, long id) {
+                Log.d("assett", buildingInfo.getChild(groupPosition, childPosition));
+                return true;
+            }
+        });
 
 
         return view;
     }
+
+
 
     public void readMetadataJson(JsonObject json) {
         JsonArray classroomsJsonArray = json.get("classrooms").getAsJsonArray();

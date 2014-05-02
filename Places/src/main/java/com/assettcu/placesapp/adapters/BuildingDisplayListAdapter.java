@@ -1,6 +1,7 @@
 package com.assettcu.placesapp.adapters;
 
 import android.app.Activity;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +15,18 @@ import java.util.HashMap;
 
 /**
  * Created by Aaron on 4/24/2014.
- * Deals with displaying an exandable list.
+ * Deals with displaying an expandable list.
  */
 public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
 {
-    private HashMap<Integer, String[]> groups;
-    private HashMap<Integer, String> groupNames;
+    private SparseArray<String[]> groups;
+    private SparseArray<String> groupNames;
     private LayoutInflater inflater;
 
     public BuildingDisplayListAdapter(Activity activity)
     {
-        groups = new HashMap<Integer, String[]>();
-        groupNames = new HashMap<Integer, String>();
+        groups = new SparseArray<String[]>();
+        groupNames = new SparseArray<String>();
         inflater = activity.getLayoutInflater();
     }
 
@@ -54,9 +55,9 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition)
+    public String getChild(int groupPosition, int childPosition)
     {
-        return null;
+        return groups.get(groupPosition)[childPosition];
     }
 
     @Override
@@ -99,7 +100,6 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent)
     {
-
         if(convertView == null)
         {
             convertView = inflater.inflate(R.layout.adapter_child_row, null);
@@ -112,13 +112,12 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
             TextView text = (TextView) convertView.findViewById(R.id.child_row_text);
             text.setText(groups.get(groupPosition)[childPosition]);
         }
-
         return convertView;
     }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition)
     {
-        return false;
+        return groupPosition == 2;
     }
 }
