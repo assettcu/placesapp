@@ -20,12 +20,13 @@ import com.assettcu.placesapp.R;
 import com.assettcu.placesapp.adapters.BuildingDisplayListAdapter;
 import com.assettcu.placesapp.models.Place;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.ProgressCallback;
 
-import org.json.JSONObject;
+import java.util.ArrayList;
 
 /**
  * Takes in information from the Place that is selected in the
@@ -89,7 +90,7 @@ public class BuildingDisplayFragment extends Fragment
 
         // Load thumbnails instead of full images
         String mBuildingURL = mPlace.getImageURL();
-        mBuildingURL = mBuildingURL.replace("/images", "/images/thumbs");
+        mBuildingURL = mBuildingURL.replace("/images", "/images/thumbs").replace(" ", "%20");
 
         // Get Building Image
         Ion.with(inflater.getContext(), mBuildingURL)
@@ -140,9 +141,11 @@ public class BuildingDisplayFragment extends Fragment
 
         buildingInfo = new BuildingDisplayListAdapter(getActivity());
 
-        buildingInfo.addDataToGroup(1, new String[] {"Test1", "Test2"}, "Printers");
-        expandableListView.setAdapter(buildingInfo);
+        buildingInfo.setGroupData(0, new String[]{"None"}, "Information");
+        buildingInfo.setGroupData(1, new String[]{"None"}, "Printers");
+        buildingInfo.setGroupData(2, new String[]{"None"}, "Classrooms");
 
+        expandableListView.setAdapter(buildingInfo);
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
             @Override
@@ -152,30 +155,45 @@ public class BuildingDisplayFragment extends Fragment
             }
         });
 
-
         return view;
     }
 
-
-
     public void readMetadataJson(JsonObject json) {
         JsonObject metadata = json.get("metadata").getAsJsonObject();
-        buildingInfo.addDataToGroup(0, new String[]{
-                "Building Code: " + metadata.get("building_code").getAsString(),
-                "Building Proctor: " + metadata.get("building_proctor").getAsString()
 
-        }, "Information");
+        JsonElement bcElement = metadata.get("building_code");
+        JsonElement bpElement = metadata.get("building_proctor");
 
+        ArrayList<String> tempInfo = new ArrayList<String>();
+        if(bcElement.isJsonNull() == false) tempInfo.add("Building Code: " + bcElement.getAsString());
+        if(bpElement.isJsonNull() == false) tempInfo.add("Building Proctor: " + bpElement.getAsString());
 
+        //Add information data
+        buildingInfo.setGroupData(0, tempInfo.toArray(new String[tempInfo.size()]), "Information");
 
+        //Add printer data
+        JsonElement printerElement = metadata.get("printers");
+        if(printerElement.isJsonNull() == false)
+        {
+            String data = printerElement.getAsString();
+            String[] array;
+
+            if (data.contains("<br/>\r\n")) array = data.split("<br/>\r\n");
+            else array = data.split(",");
+
+            buildingInfo.setGroupData(1, array, "Printers");
+        }
+
+        //Add classroom data
         JsonArray classroomsJsonArray = json.get("classrooms").getAsJsonArray();
         String[] classrooms = new String[classroomsJsonArray.size()];
         for(int i = 0; i < classroomsJsonArray.size(); i++) {
             String room = classroomsJsonArray.get(i).getAsJsonObject().get("placename").getAsString();
-            classrooms[i] = room;
+            classrooms[i] = room.toUpperCase();
             Log.d("Assett", room);
         }
-        buildingInfo.addDataToGroup(2, classrooms, "Classrooms (" + classrooms.length + ")");
+        buildingInfo.setGroupData(2, classrooms, "Classrooms (" + classrooms.length + ")");
+
         buildingInfo.notifyDataSetChanged();
     }
 

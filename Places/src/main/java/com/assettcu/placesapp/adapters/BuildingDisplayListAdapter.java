@@ -30,8 +30,10 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
         inflater = activity.getLayoutInflater();
     }
 
-    public void addDataToGroup(int groupPosition, String[] values, String groupName)
+    public void setGroupData(int groupPosition, String[] values, String groupName)
     {
+        if(values.length == 0) return;
+
         groups.put(groupPosition, values);
         groupNames.put(groupPosition, groupName);
     }
