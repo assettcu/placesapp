@@ -146,7 +146,6 @@ public class BuildingDisplayFragment extends Fragment
 
         buildingInfo.setGroupData(0, new String[]{"None"}, "Information");
         buildingInfo.setGroupData(1, new String[]{"None"}, "Printers");
-        buildingInfo.setGroupData(2, new String[]{"None"}, "Classrooms");
 
         expandableListView.setAdapter(buildingInfo);
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {

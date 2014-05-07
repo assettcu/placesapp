@@ -78,10 +78,6 @@ public class WhereAmIFragment extends Fragment {
 
         setOnClickAdapter();
 
-        progress = new ProgressDialog(getActivity());
-        progress.setTitle("Please wait");
-        progress.setMessage("Loading Buildings...");
-
         mGeofenceList = new ArrayList<Geofence>();
         receiver = geofenceBroadcastReceiver();
 
@@ -91,8 +87,17 @@ public class WhereAmIFragment extends Fragment {
         if(createTestGeofences)
             addTestGeofences();
 
+        Activity parent = getActivity();
+        if(parent instanceof HomeActivity) {
+            buildingsJsonArray = ((HomeActivity) parent).getBuildingsJsonArray();
+            Log.d("Assett", "Got BuildingsArray. null = " + (buildingsJsonArray == null));
+        }
+
         // If the JSON array hasn't been fetched yet, get it
         if(buildingsJsonArray == null) {
+            progress = new ProgressDialog(getActivity());
+            progress.setTitle("Please wait");
+            progress.setMessage("Loading Buildings...");
             progress.show();
             Ion.with(inflater.getContext()).load("http://places.colorado.edu/api/buildings").asJsonArray()
                     .setCallback(new FutureCallback<JsonArray>() {
@@ -215,6 +220,12 @@ public class WhereAmIFragment extends Fragment {
     public void readBuildingsJson(JsonArray json) {
         buildingsJsonArray = json;
 
+        Activity parent = getActivity();
+        if(parent instanceof HomeActivity) {
+            ((HomeActivity) parent).setBuildingsJsonArray(json);
+            Log.d("Assett", "Set BuildingsJsonArray");
+        }
+
         AnimationSet set = new AnimationSet(true);
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(300);
@@ -252,7 +263,6 @@ public class WhereAmIFragment extends Fragment {
                     100);
         }
 
-        Activity parent = getActivity();
         if(parent instanceof HomeActivity) {
             ((HomeActivity) parent).addGeofences(mGeofenceList);
         }
@@ -297,9 +307,9 @@ public class WhereAmIFragment extends Fragment {
                     }
                 }
             }
-            if(progress.isShowing())
-                progress.dismiss();
         }
+        if(progress.isShowing())
+            progress.dismiss();
     }
 
     public void addGeofence(String id, double latitude, double longitude, float radius){

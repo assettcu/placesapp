@@ -29,6 +29,7 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationStatusCodes;
+import com.google.gson.JsonArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,8 @@ public class HomeActivity extends ActionBarActivity
     private CharSequence mTitle;
     private LocationRequest mLocationRequest;
     private LocationClient mLocationClient;
+
+    private JsonArray buildingsJsonArray;
 
     PendingIntent pendIntent;
     Intent intent;
@@ -279,6 +282,16 @@ public class HomeActivity extends ActionBarActivity
 
     @Override
     public void onLocationChanged(Location location) { }
+
+    // Get the buildingsJsonArray. Can return null.
+    public JsonArray getBuildingsJsonArray() {
+        return buildingsJsonArray;
+    }
+
+    // Set the buildingsJsonArray
+    public void setBuildingsJsonArray(JsonArray buildingsJsonArray) {
+        this.buildingsJsonArray = buildingsJsonArray;
+    }
 
     // Get the current location. Can return null.
     public Location getLocation() {

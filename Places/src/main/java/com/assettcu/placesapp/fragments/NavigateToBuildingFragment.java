@@ -6,17 +6,20 @@ package com.assettcu.placesapp.fragments;
  * created: 3/31/14.
  */
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.assettcu.placesapp.HomeActivity;
 import com.assettcu.placesapp.R;
 import com.assettcu.placesapp.models.Place;
 import com.google.gson.JsonArray;
@@ -31,7 +34,7 @@ public class NavigateToBuildingFragment extends ListFragment {
     private ProgressDialog progress;
     ArrayAdapter<String> adapter;
     ArrayList<String> buildings;
-    JsonArray json;
+    JsonArray buildingsJsonArray;
     ArrayList<Place> places;
 
     @Override
@@ -41,7 +44,13 @@ public class NavigateToBuildingFragment extends ListFragment {
         places = new ArrayList<Place>();
         setListAdapter(adapter);
 
-        if(json == null) {
+        Activity parent = getActivity();
+        if(parent instanceof HomeActivity) {
+            buildingsJsonArray = ((HomeActivity) parent).getBuildingsJsonArray();
+            Log.d("Assett", "Got BuildingsArray. null = " + (buildingsJsonArray == null));
+        }
+
+        if(buildingsJsonArray == null) {
             progress = new ProgressDialog(getActivity());
             progress.setTitle("Please wait");
             progress.setMessage("Loading Buildings...");
@@ -57,7 +66,7 @@ public class NavigateToBuildingFragment extends ListFragment {
         }
         else
         {
-            readJSON(json);
+            readJSON(buildingsJsonArray);
         }
 
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -81,7 +90,13 @@ public class NavigateToBuildingFragment extends ListFragment {
     }
 
     public void readJSON(JsonArray json) {
-        this.json = json;
+        this.buildingsJsonArray = json;
+
+        Activity parent = getActivity();
+        if(parent instanceof HomeActivity) {
+            ((HomeActivity) parent).setBuildingsJsonArray(json);
+            Log.d("Assett", "Set BuildingsJsonArray");
+        }
 
         for (int i = 0; i < json.size(); i++) {
                 JsonObject jsonObject = json.get(i).getAsJsonObject();
