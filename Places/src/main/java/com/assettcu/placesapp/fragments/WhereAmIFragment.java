@@ -66,7 +66,7 @@ public class WhereAmIFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_where_am_i, container, false);
         listView = (ListView) view.findViewById(R.id.list_view);
         outOfRangeTextView = (TextView) view.findViewById(R.id.outofrange);
@@ -93,9 +93,9 @@ public class WhereAmIFragment extends Fragment {
             Log.d("Assett", "Got BuildingsArray. null = " + (buildingsJsonArray == null));
         }
 
+        progress = new ProgressDialog(getActivity());
         // If the JSON array hasn't been fetched yet, get it
         if(buildingsJsonArray == null) {
-            progress = new ProgressDialog(getActivity());
             progress.setTitle("Please wait");
             progress.setMessage("Loading Buildings...");
             progress.show();
@@ -142,7 +142,15 @@ public class WhereAmIFragment extends Fragment {
             ((HomeActivity) parent).removeGeofences();
         }
 
+        progress.dismiss();
+
         super.onStop();
+    }
+
+    @Override
+    public void onDestroyView() {
+        progress.dismiss();
+        super.onDestroyView();
     }
 
     public BroadcastReceiver geofenceBroadcastReceiver() {

@@ -50,8 +50,9 @@ public class NavigateToBuildingFragment extends ListFragment {
             Log.d("Assett", "Got BuildingsArray. null = " + (buildingsJsonArray == null));
         }
 
+        progress = new ProgressDialog(getActivity());
+
         if(buildingsJsonArray == null) {
-            progress = new ProgressDialog(getActivity());
             progress.setTitle("Please wait");
             progress.setMessage("Loading Buildings...");
             progress.show();
@@ -70,6 +71,12 @@ public class NavigateToBuildingFragment extends ListFragment {
         }
 
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        progress.dismiss();
+        super.onDestroyView();
     }
 
     @Override
