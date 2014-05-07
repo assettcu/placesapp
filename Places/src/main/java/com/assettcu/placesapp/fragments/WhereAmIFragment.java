@@ -314,7 +314,13 @@ public class WhereAmIFragment extends Fragment {
     }
 
     public Location getLocation() {
-        return ((HomeActivity) getActivity()).getLocation();
+        Activity parent = getActivity();
+        if(parent instanceof HomeActivity) {
+            return ((HomeActivity) parent).getLocation();
+        }
+        else {
+            return null;
+        }
     }
 
 

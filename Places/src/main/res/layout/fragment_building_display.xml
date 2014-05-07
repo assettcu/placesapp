@@ -49,8 +49,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/expandableListView"
         android:dividerHeight="1dp"
-        android:headerDividersEnabled="false"
-        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="true"
+        android:footerDividersEnabled="true"
         android:layout_marginBottom="5dp"/>
 
 </LinearLayout>

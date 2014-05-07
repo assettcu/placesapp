@@ -1,6 +1,7 @@
 package com.assettcu.placesapp.adapters;
 
 import android.app.Activity;
+import android.text.Html;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -107,12 +108,12 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
             convertView = inflater.inflate(R.layout.adapter_child_row, null);
 
             TextView text = (TextView) convertView.findViewById(R.id.child_row_text);
-            text.setText(groups.get(groupPosition)[childPosition]);
+            text.setText(Html.fromHtml(groups.get(groupPosition)[childPosition]));
         }
         else
         {
             TextView text = (TextView) convertView.findViewById(R.id.child_row_text);
-            text.setText(groups.get(groupPosition)[childPosition]);
+            text.setText(Html.fromHtml(groups.get(groupPosition)[childPosition]));
         }
         return convertView;
     }

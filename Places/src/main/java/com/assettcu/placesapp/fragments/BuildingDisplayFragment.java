@@ -27,6 +27,9 @@ import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.ProgressCallback;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Takes in information from the Place that is selected in the
@@ -159,40 +162,57 @@ public class BuildingDisplayFragment extends Fragment
     }
 
     public void readMetadataJson(JsonObject json) {
-        JsonObject metadata = json.get("metadata").getAsJsonObject();
+        if (json.has("information")) {
+            JsonObject information = json.get("information").getAsJsonObject();
 
-        JsonElement bcElement = metadata.get("building_code");
-        JsonElement bpElement = metadata.get("building_proctor");
+            List<String> tempInfo = new ArrayList<String>();
+            JsonElement element;
+            if (!(element = information.get("building_code")).isJsonNull())
+                tempInfo.add("<b>Building Code:</b> " + element.getAsString());
+            if (!(element = information.get("building_proctor")).isJsonNull())
+                tempInfo.add("<b>Proctor:</b> " + element.getAsString());
+            if (!(element = information.get("hours_open")).isJsonNull())
+                tempInfo.add("<b>Hours Open:</b> " + element.getAsString());
+            if (!(element = information.get("number_of_doors")).isJsonNull())
+                tempInfo.add("<b>Number of Doors:</b> " + element.getAsString());
 
-        ArrayList<String> tempInfo = new ArrayList<String>();
-        if(bcElement.isJsonNull() == false) tempInfo.add("Building Code: " + bcElement.getAsString());
-        if(bpElement.isJsonNull() == false) tempInfo.add("Building Proctor: " + bpElement.getAsString());
+            //Add information data
+            buildingInfo.setGroupData(0, tempInfo.toArray(new String[tempInfo.size()]), "Information");
 
-        //Add information data
-        buildingInfo.setGroupData(0, tempInfo.toArray(new String[tempInfo.size()]), "Information");
+            //Add printer data
+            JsonElement printerElement = information.get("printers");
+            if (!printerElement.isJsonNull()) {
+                String data = printerElement.getAsString();
+                String[] array;
 
-        //Add printer data
-        JsonElement printerElement = metadata.get("printers");
-        if(printerElement.isJsonNull() == false)
-        {
-            String data = printerElement.getAsString();
-            String[] array;
+                if (data.contains("<br/>\r\n")) array = data.split("<br/>\r\n");
+                else array = data.split(",");
 
-            if (data.contains("<br/>\r\n")) array = data.split("<br/>\r\n");
-            else array = data.split(",");
-
-            buildingInfo.setGroupData(1, array, "Printers");
+                buildingInfo.setGroupData(1, array, "Printers");
+            }
         }
 
-        //Add classroom data
-        JsonArray classroomsJsonArray = json.get("classrooms").getAsJsonArray();
-        String[] classrooms = new String[classroomsJsonArray.size()];
-        for(int i = 0; i < classroomsJsonArray.size(); i++) {
-            String room = classroomsJsonArray.get(i).getAsJsonObject().get("placename").getAsString();
-            classrooms[i] = room.toUpperCase();
-            Log.d("Assett", room);
+        // Add classroom data
+        if (json.has("classrooms")) {
+            JsonArray classroomsJsonArray = json.get("classrooms").getAsJsonArray();
+            String[] classrooms = new String[classroomsJsonArray.size()];
+            for (int i = 0; i < classroomsJsonArray.size(); i++) {
+                String room = classroomsJsonArray.get(i).getAsJsonObject().get("placename").getAsString();
+                classrooms[i] = room.toUpperCase();
+            }
+            buildingInfo.setGroupData(2, classrooms, "Classrooms (" + classrooms.length + ")");
         }
-        buildingInfo.setGroupData(2, classrooms, "Classrooms (" + classrooms.length + ")");
+
+        // Add labs data
+        if (json.has("labs")) {
+            JsonArray classroomsJsonArray = json.get("labs").getAsJsonArray();
+            String[] labs = new String[classroomsJsonArray.size()];
+            for (int i = 0; i < classroomsJsonArray.size(); i++) {
+                String room = classroomsJsonArray.get(i).getAsJsonObject().get("placename").getAsString();
+                labs[i] = room.toUpperCase();
+            }
+            buildingInfo.setGroupData(3, labs, "Labs (" + labs.length + ")");
+        }
 
         buildingInfo.notifyDataSetChanged();
     }
