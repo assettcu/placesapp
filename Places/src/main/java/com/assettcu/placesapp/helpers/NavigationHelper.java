@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 
 import com.assettcu.placesapp.R;
+import com.assettcu.placesapp.fragments.MyClassesFragment;
 import com.assettcu.placesapp.fragments.NavigateToBuildingFragment;
 import com.assettcu.placesapp.fragments.NeedFragment;
 import com.assettcu.placesapp.fragments.PlaceholderFragment;
@@ -26,7 +27,7 @@ public class NavigationHelper
         fragmentArray[0] = new WhereAmIFragment();
         fragmentArray[1] = new NavigateToBuildingFragment();
         fragmentArray[2] = new NeedFragment();
-        fragmentArray[3] = new PlaceholderFragment();
+        fragmentArray[3] = new MyClassesFragment();
         fragmentArray[4] = new PlaceholderFragment();
 
         titleArray[0] = parent.getString(R.string.title_section1);

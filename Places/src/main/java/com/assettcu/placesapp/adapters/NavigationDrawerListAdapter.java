@@ -50,8 +50,7 @@ public class NavigationDrawerListAdapter extends BaseAdapter
         View navListView;
 
         if (convertView == null)
-        {  // if it's not recycled, initialize some attributes
-
+        {
             navListView = new View(mContext);
 
             // get layout from drawer_item

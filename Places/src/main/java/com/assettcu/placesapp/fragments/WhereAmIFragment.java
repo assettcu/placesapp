@@ -45,6 +45,9 @@ import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -225,7 +228,8 @@ public class WhereAmIFragment extends Fragment {
                 "http://www.zombiezodiac.com/rob/ped/busstop/keio_bus_stop.JPG"));
     }
 
-    public void readBuildingsJson(JsonArray json) {
+    public void readBuildingsJson(JsonArray json)
+    {
         buildingsJsonArray = json;
 
         Activity parent = getActivity();
@@ -251,7 +255,8 @@ public class WhereAmIFragment extends Fragment {
         listView.setLayoutAnimation(controller);
 
         Place place;
-        for(int i = 0; i < json.size(); i++) {
+        for(int i = 0; i < json.size(); i++)
+        {
             JsonObject building = json.get(i).getAsJsonObject();
 
             // Create new place and add it to array
@@ -340,7 +345,6 @@ public class WhereAmIFragment extends Fragment {
             return null;
         }
     }
-
 
     // Wait for a GPS lock
     class WaitForGPSLockTask extends AsyncTask<Void, Void, Boolean> {

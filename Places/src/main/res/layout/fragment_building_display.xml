@@ -4,8 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
-    android:background="@drawable/card">
+    android:padding="10dp">
 
     <LinearLayout
         android:id="@+id/header"
@@ -23,7 +22,7 @@
             android:layout_margin="10dp"/>
 
         <View
-            android:layout_width="1dip"
+            android:layout_width="2dp"
             android:layout_height="fill_parent"
             android:layout_margin="5dp"
             android:background="#e5e5e5"
@@ -41,7 +40,7 @@
 
     <View
         android:layout_width="fill_parent"
-        android:layout_height="1dp"
+        android:layout_height="2dp"
         android:background="#e5e5e5"/>
 
     <ExpandableListView

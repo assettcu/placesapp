@@ -38,9 +38,12 @@ public class NavigateToBuildingFragment extends ListFragment {
     ArrayList<Place> places;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+
         buildings = new ArrayList<String>();
-        adapter = new ArrayAdapter<String>(inflater.getContext(), android.R.layout.simple_list_item_1, buildings);
+        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, buildings);
         places = new ArrayList<Place>();
         setListAdapter(adapter);
 
@@ -56,7 +59,7 @@ public class NavigateToBuildingFragment extends ListFragment {
             progress.setTitle("Please wait");
             progress.setMessage("Loading Buildings...");
             progress.show();
-            Ion.with(inflater.getContext()).load("http://places.colorado.edu/api/buildings").asJsonArray()
+            Ion.with(getActivity()).load("http://places.colorado.edu/api/buildings").asJsonArray()
                     .setCallback(new FutureCallback<JsonArray>() {
                         @Override
                         public void onCompleted(Exception e, JsonArray result) {
@@ -69,6 +72,11 @@ public class NavigateToBuildingFragment extends ListFragment {
         {
             readJSON(buildingsJsonArray);
         }
+    }
+
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }

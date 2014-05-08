@@ -1,0 +1,71 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              tools:context="com.assettcu.placesapp.fragments.MyClassesFragment">
+
+    <LinearLayout
+        android:id="@+id/class_header"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_width="match_parent">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="My Classes"
+            android:textColor="#707070"
+            style="@android:style/TextAppearance.Large"
+            android:layout_weight="0.7"
+            android:layout_margin="15dp"/>
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="fill_parent"
+            android:background="#e5e5e5"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp" />
+
+        <ImageButton
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/edit_button_background"
+            android:src="@drawable/ic_action_discard"
+            android:paddingRight="5dp"
+            android:layout_weight="0.15"/>
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="fill_parent"
+            android:background="#e5e5e5"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"/>
+
+        <ImageButton
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/edit_button_background"
+            android:src="@drawable/ic_action_new"
+            android:layout_weight="0.15"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:background="#e5e5e5"/>
+
+    <ListView
+        android:id="@+id/class_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:headerDividersEnabled="false"
+        android:footerDividersEnabled="false"
+        android:dividerHeight="1dp"
+        android:choiceMode="multipleChoice"/>
+
+
+</LinearLayout>
