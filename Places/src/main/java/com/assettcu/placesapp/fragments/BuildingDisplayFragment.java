@@ -3,6 +3,8 @@ package com.assettcu.placesapp.fragments;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.assettcu.placesapp.R;
 import com.assettcu.placesapp.adapters.BuildingDisplayListAdapter;
@@ -28,8 +29,6 @@ import com.koushikdutta.ion.ProgressCallback;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Takes in information from the Place that is selected in the
@@ -152,7 +151,19 @@ public class BuildingDisplayFragment extends Fragment
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v,int groupPosition, int childPosition, long id) {
-                Log.d("assett", buildingInfo.getChild(groupPosition, childPosition));
+                String roomName = buildingInfo.getChild(groupPosition, childPosition);
+                int roomId = buildingInfo.getRoomId(roomName);
+                Log.d("assett", "Room Name: " + roomName + " - Room ID: " + roomId);
+
+                RoomDisplayFragment fragment = RoomDisplayFragment.newInstance(roomName, roomId);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+                fragmentManager.beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .replace(R.id.container, fragment)
+                        .addToBackStack(null)
+                        .commit();
+
                 return true;
             }
         });
@@ -196,8 +207,11 @@ public class BuildingDisplayFragment extends Fragment
             JsonArray classroomsJsonArray = json.get("classrooms").getAsJsonArray();
             String[] classrooms = new String[classroomsJsonArray.size()];
             for (int i = 0; i < classroomsJsonArray.size(); i++) {
-                String room = classroomsJsonArray.get(i).getAsJsonObject().get("placename").getAsString();
-                classrooms[i] = room.toUpperCase();
+                JsonObject room = classroomsJsonArray.get(i).getAsJsonObject();
+                String roomName = room.get("placename").getAsString().toUpperCase();
+                int roomId = room.get("placeid").getAsInt();
+                classrooms[i] = roomName;
+                buildingInfo.addRoomId(roomName, roomId);
             }
             buildingInfo.setGroupData(2, classrooms, "Classrooms (" + classrooms.length + ")");
         }
@@ -207,8 +221,11 @@ public class BuildingDisplayFragment extends Fragment
             JsonArray classroomsJsonArray = json.get("labs").getAsJsonArray();
             String[] labs = new String[classroomsJsonArray.size()];
             for (int i = 0; i < classroomsJsonArray.size(); i++) {
-                String room = classroomsJsonArray.get(i).getAsJsonObject().get("placename").getAsString();
-                labs[i] = room.toUpperCase();
+                JsonObject room = classroomsJsonArray.get(i).getAsJsonObject();
+                String roomName = room.get("placename").getAsString().toUpperCase();
+                int roomId = room.get("placeid").getAsInt();
+                labs[i] = roomName;
+                buildingInfo.addRoomId(roomName, roomId);
             }
             buildingInfo.setGroupData(3, labs, "Labs (" + labs.length + ")");
         }

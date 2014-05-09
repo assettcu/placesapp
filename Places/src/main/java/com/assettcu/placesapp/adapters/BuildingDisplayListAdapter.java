@@ -7,11 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.assettcu.placesapp.R;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -22,12 +22,14 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
 {
     private SparseArray<String[]> groups;
     private SparseArray<String> groupNames;
+    private HashMap<String, Integer> roomId;
     private LayoutInflater inflater;
 
     public BuildingDisplayListAdapter(Activity activity)
     {
         groups = new SparseArray<String[]>();
         groupNames = new SparseArray<String>();
+        roomId = new HashMap<String, Integer>();
         inflater = activity.getLayoutInflater();
     }
 
@@ -37,6 +39,14 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
 
         groups.put(groupPosition, values);
         groupNames.put(groupPosition, groupName);
+    }
+
+    public void addRoomId(String roomName, int id) {
+        roomId.put(roomName, id);
+    }
+
+    public int getRoomId(String roomName){
+        return roomId.get(roomName);
     }
 
     @Override
@@ -115,12 +125,19 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
             TextView text = (TextView) convertView.findViewById(R.id.child_row_text);
             text.setText(Html.fromHtml(groups.get(groupPosition)[childPosition]));
         }
+
+        ImageView arrow = (ImageView) convertView.findViewById(R.id.child_row_arrow);
+        if(isChildSelectable(groupPosition, childPosition))
+            arrow.setVisibility(View.VISIBLE);
+        else
+            arrow.setVisibility(View.GONE);
+
         return convertView;
     }
 
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition)
     {
-        return groupPosition == 2;
+        return groupPosition >= 2;
     }
 }
