@@ -62,15 +62,11 @@ public class BuildingDisplayFragment extends Fragment
         return fragment;
     }
 
-    public BuildingDisplayFragment()
-    {
-
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null)
         {
            mPlace = (Place) getArguments().getSerializable(ARG_PLACE);

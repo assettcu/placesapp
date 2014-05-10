@@ -64,9 +64,7 @@ public class NeedAdapter extends BaseAdapter
         View listView;
 
         if (convertView == null)
-        {  // if it's not recycled, initialize some attributes
-            listView = new View(mContext);
-
+        {
             // get layout from adapter_list_need
             listView = inflater.inflate(R.layout.adapter_list_need, null);
 

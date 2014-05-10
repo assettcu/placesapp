@@ -1,7 +1,6 @@
 package com.assettcu.placesapp.adapters;
 
 import android.content.Context;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,16 @@ public class CourseListAdapter extends BaseAdapter implements Serializable
     {
         courses = new ArrayList<Course>();
         mContext = c;
+    }
+
+    public void setAllChecked(boolean isChecked)
+    {
+        for(Iterator<Course> it = courses.iterator(); it.hasNext();)
+        {
+            it.next().setSelected(isChecked);
+        }
+
+        notifyDataSetChanged();
     }
 
     public boolean hasChecked()
@@ -83,19 +92,20 @@ public class CourseListAdapter extends BaseAdapter implements Serializable
     public View getView(final int position, View convertView, ViewGroup parent)
     {
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View classListView;
-
-        classListView = new View(mContext);
-        classListView = inflater.inflate(R.layout.adapter_list_course, null);
+        View classListView = inflater.inflate(R.layout.adapter_list_course, null);
 
         Course course = courses.get(position);
 
         TextView className = (TextView) classListView.findViewById(R.id.class_list_name);
         TextView buildingName = (TextView) classListView.findViewById(R.id.building_list_name);
+        TextView classRoomName = (TextView) classListView.findViewById(R.id.class_room_name);
         CheckBox checkBox = (CheckBox) classListView.findViewById(R.id.class_check_box);
 
+        classRoomName.setText(course.getClassRoomName());
         className.setText(course.getName());
-        buildingName.setText(course.getCname());
+        buildingName.setText(course.getClassName());
+
+        if(course.isSelected()) checkBox.setChecked(true);
 
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
         {

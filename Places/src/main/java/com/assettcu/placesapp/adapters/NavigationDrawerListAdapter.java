@@ -51,8 +51,6 @@ public class NavigationDrawerListAdapter extends BaseAdapter
 
         if (convertView == null)
         {
-            navListView = new View(mContext);
-
             // get layout from drawer_item
             navListView = inflater.inflate(R.layout.drawer_item, null);
 
@@ -64,7 +62,7 @@ public class NavigationDrawerListAdapter extends BaseAdapter
 
         } else
         {
-            navListView = (View) convertView;
+            navListView = convertView;
         }
 
         return navListView;

@@ -87,7 +87,6 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
         if(convertView == null)
         {
             convertView = inflater.inflate(R.layout.adapter_group_row, null);
-
             TextView text = (TextView) convertView.findViewById(R.id.group_row_text);
             text.setText(groupNames.get(groupPosition));
         }
@@ -106,7 +105,6 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
         if(convertView == null)
         {
             convertView = inflater.inflate(R.layout.adapter_child_row, null);
-
             TextView text = (TextView) convertView.findViewById(R.id.child_row_text);
             text.setText(Html.fromHtml(groups.get(groupPosition)[childPosition]));
         }

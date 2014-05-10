@@ -15,7 +15,7 @@
         android:textSize="30sp"
         android:layout_gravity="top"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="80dp"/>
+        android:layout_marginLeft="79dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,4 +35,14 @@
         android:id="@+id/class_check_box"
         android:layout_gravity="left|top"
         android:layout_margin="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Class Room"
+        android:id="@+id/class_room_name"
+        android:layout_gravity="left|top"
+        android:layout_marginLeft="81dp"
+        android:layout_marginTop="65dp"/>
+
 </FrameLayout>

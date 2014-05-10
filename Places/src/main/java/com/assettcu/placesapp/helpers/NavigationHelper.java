@@ -17,7 +17,7 @@ import com.assettcu.placesapp.fragments.WhereAmIFragment;
 
 public class NavigationHelper
 {
-    private final static int NUM_SUPPORTED_FRAGMENTS = 5;
+    private final static int NUM_SUPPORTED_FRAGMENTS = 6;
     private Fragment fragmentArray[] = new Fragment[10];
     private CharSequence titleArray[] = new CharSequence[10];
     private Integer iconArray[] = new Integer[10];
@@ -29,18 +29,21 @@ public class NavigationHelper
         fragmentArray[2] = new NeedFragment();
         fragmentArray[3] = new MyClassesFragment();
         fragmentArray[4] = new PlaceholderFragment();
+        fragmentArray[5] = new PlaceholderFragment();
 
         titleArray[0] = parent.getString(R.string.title_section1);
         titleArray[1] = parent.getString(R.string.title_section2);
         titleArray[2] = parent.getString(R.string.title_section3);
         titleArray[3] = parent.getString(R.string.title_section4);
         titleArray[4] = parent.getString(R.string.title_section5);
+        titleArray[5] = parent.getString(R.string.title_section6);
 
-        iconArray[0] = android.R.drawable.ic_menu_mylocation;
-        iconArray[1] = android.R.drawable.ic_menu_directions;
-        iconArray[2] = android.R.drawable.ic_menu_info_details;
-        iconArray[3] = android.R.drawable.ic_menu_agenda;
-        iconArray[4] = android.R.drawable.ic_notification_clear_all;
+        iconArray[0] = R.drawable.ic_action_location_found;
+        iconArray[1] = R.drawable.ic_action_directions;
+        iconArray[2] = R.drawable.ic_action_help;
+        iconArray[3] = R.drawable.ic_action_event;
+        iconArray[4] = R.drawable.ic_action_warning;
+        iconArray[5] = R.drawable.ic_action_settings;
     }
 
     public Fragment getFragmentAtPosition(int i)

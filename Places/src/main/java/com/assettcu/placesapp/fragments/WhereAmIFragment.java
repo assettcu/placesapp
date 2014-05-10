@@ -32,6 +32,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,14 +41,13 @@ import com.assettcu.placesapp.HomeActivity;
 import com.assettcu.placesapp.R;
 import com.assettcu.placesapp.models.Place;
 import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationRequest;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +56,7 @@ public class WhereAmIFragment extends Fragment {
     public static final boolean createTestGeofences = false;  // Create Test ASSETT geofences
 
     private ProgressDialog progress;
+    private ProgressBar progressBar;
     private ArrayAdapter<Place> adapter;
     private List<Place> places;
     private Place nearestBuilding;                // Manual building if use is not in any geofences
@@ -73,6 +74,7 @@ public class WhereAmIFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_where_am_i, container, false);
         listView = (ListView) view.findViewById(R.id.list_view);
         outOfRangeTextView = (TextView) view.findViewById(R.id.outofrange);
+        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         listView.setEmptyView(outOfRangeTextView);
 
         places = new ArrayList<Place>();
@@ -96,12 +98,13 @@ public class WhereAmIFragment extends Fragment {
             Log.d("Assett", "Got BuildingsArray. null = " + (buildingsJsonArray == null));
         }
 
-        progress = new ProgressDialog(getActivity());
+        progressBar.setVisibility(View.VISIBLE);
+        //progress = new ProgressDialog(getActivity());
         // If the JSON array hasn't been fetched yet, get it
         if(buildingsJsonArray == null) {
-            progress.setTitle("Please wait");
-            progress.setMessage("Loading Buildings...");
-            progress.show();
+            //progress.setTitle("Please wait");
+            //progress.setMessage("Loading Buildings...");
+            //progress.show();
             Ion.with(inflater.getContext()).load("http://places.colorado.edu/api/buildings").asJsonArray()
                     .setCallback(new FutureCallback<JsonArray>() {
                         @Override
@@ -109,11 +112,13 @@ public class WhereAmIFragment extends Fragment {
                             readBuildingsJson(result);
                         }
                     });
+
         }
         // Otherwise just load it in again
         else {
             readBuildingsJson(buildingsJsonArray);
         }
+
 
         return view;
     }
@@ -145,14 +150,16 @@ public class WhereAmIFragment extends Fragment {
             ((HomeActivity) parent).removeGeofences();
         }
 
-        progress.dismiss();
+        progressBar.setVisibility(View.INVISIBLE);
+        //progress.dismiss();
 
         super.onStop();
     }
 
     @Override
     public void onDestroyView() {
-        progress.dismiss();
+        progressBar.setVisibility(View.INVISIBLE);
+        //progress.dismiss();
         super.onDestroyView();
     }
 
@@ -167,8 +174,9 @@ public class WhereAmIFragment extends Fragment {
 
                     if(triggerIds != null && triggerIds.length > 0) {
                         if (transitionType == Geofence.GEOFENCE_TRANSITION_ENTER) {
-                            if(progress.isShowing())
-                                progress.dismiss();
+//                            if(progress.isShowing())
+//                                progress.dismiss();
+                            progressBar.setVisibility(View.INVISIBLE);
 
                             if(nearestBuilding != null){
                                 adapter.remove(nearestBuilding);
@@ -274,6 +282,8 @@ public class WhereAmIFragment extends Fragment {
                     Double.valueOf(place.getLatitude()),
                     Double.valueOf(place.getLongitude()),
                     100);
+
+            progressBar.setProgress(i);
         }
 
         if(parent instanceof HomeActivity) {
@@ -321,8 +331,10 @@ public class WhereAmIFragment extends Fragment {
                 }
             }
         }
-        if(progress.isShowing())
-            progress.dismiss();
+
+        progressBar.setVisibility(View.INVISIBLE);
+//        if(progress.isShowing())
+//            progress.dismiss();
     }
 
     public void addGeofence(String id, double latitude, double longitude, float radius){
@@ -346,27 +358,50 @@ public class WhereAmIFragment extends Fragment {
         }
     }
 
+    private void updateIntervalSpeed(long millis, boolean ignore)
+    {
+        Activity parent = getActivity();
+
+        if(parent instanceof HomeActivity)
+        {
+            LocationRequest request = ((HomeActivity) parent).getLocationRequest();
+            request.setInterval(millis);
+
+            if(ignore) request.setFastestInterval(millis);
+            else request.setFastestInterval(1000);
+        }
+    }
+
     // Wait for a GPS lock
     class WaitForGPSLockTask extends AsyncTask<Void, Void, Boolean> {
         protected Boolean doInBackground(Void... urls) {
+            final int LOCK_ACCURACY = 30;
             int waitTime = 30;                 // Seconds to wait for a GPS lock before giving up
             int waited = 0;                    // Seconds waited for a GPS lock
-            Location gps = getLocation();      // Current GPS location
+            Location gps = getLocation();     // Current GPS location
+
+            //updateIntervalSpeed(100, true);
 
             if(gps != null) {
                 // While the GPS accuracy is worse than 25 meters AND the user has
                 // waited less than 'waitTime' seconds for a GPS lock
-                while ((gps = getLocation()).getAccuracy() > 25 && waited < waitTime) {
+                while ((gps = getLocation()).getAccuracy() > LOCK_ACCURACY && waited < waitTime) {
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(250);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+
+                    //currentProgress += 100*(25/gps.getAccuracy());
+                    progressBar.setProgress((int)(100*(LOCK_ACCURACY/gps.getAccuracy())));
                     waited++;
                 }
+                progressBar.setProgress(100);
                 // If the GPS obtained a lock: return true, otherwise: return false
-                return (gps.getAccuracy() <= 25);
+                //updateIntervalSpeed(5000, false);
+                return (gps.getAccuracy() <= LOCK_ACCURACY);
             }
+
             // If the GPS isn't started, return false;
             return false;
         }

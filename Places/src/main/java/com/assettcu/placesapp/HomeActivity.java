@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.assettcu.placesapp.fragments.BuildingDisplayFragment;
@@ -76,7 +77,6 @@ public class HomeActivity extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         places = new ArrayList<String>();
-
 
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -242,10 +242,6 @@ public class HomeActivity extends ActionBarActivity
         Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(
                 "http://maps.google.com/maps?daddr=" + latitude + "," + longitude + "&dirflg=w"));
         startActivity(i);
-
-//        Toast.makeText(this, "building :" + buildings.get(position),
-//                Toast.LENGTH_LONG).show();
-
     }
 
     // Define a DialogFragment that displays the error dialog
@@ -282,6 +278,11 @@ public class HomeActivity extends ActionBarActivity
 
     @Override
     public void onLocationChanged(Location location) { }
+
+    public LocationRequest getLocationRequest()
+    {
+        return mLocationRequest;
+    }
 
     // Get the buildingsJsonArray. Can return null.
     public JsonArray getBuildingsJsonArray() {

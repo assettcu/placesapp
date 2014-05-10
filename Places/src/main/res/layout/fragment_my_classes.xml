@@ -11,45 +11,32 @@
         android:orientation="horizontal"
         android:layout_width="match_parent">
 
-        <TextView
+        <CheckBox
+            android:id="@+id/check_all"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="My Classes"
-            android:textColor="#707070"
-            style="@android:style/TextAppearance.Large"
-            android:layout_weight="0.7"
-            android:layout_margin="15dp"/>
-
-        <View
-            android:layout_width="2dp"
-            android:layout_height="fill_parent"
-            android:background="#e5e5e5"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp" />
+            android:layout_weight="0.9"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            />
 
         <ImageButton
             android:id="@+id/delete_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/edit_button_background"
+            android:background="@drawable/standard_button_background"
             android:src="@drawable/ic_action_discard"
             android:paddingRight="5dp"
-            android:layout_weight="0.15"/>
-
-        <View
-            android:layout_width="2dp"
-            android:layout_height="fill_parent"
-            android:background="#e5e5e5"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"/>
+            android:layout_weight="0.1"/>
 
         <ImageButton
             android:id="@+id/add_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/edit_button_background"
+            android:background="@drawable/standard_button_background"
             android:src="@drawable/ic_action_new"
-            android:layout_weight="0.15"/>
+            android:layout_weight="0.1"/>
 
     </LinearLayout>
 

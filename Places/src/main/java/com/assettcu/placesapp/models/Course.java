@@ -10,20 +10,22 @@ import java.io.Serializable;
 public class Course implements Serializable
 {
     private Place place;
-    private String name, cname;
+    private String name, className, classRoomName;
     private boolean isSelected;
 
-    public Course(Place place, String name)
+    public Course(String b, String name)
     {
-        this.name = name;
-        this.place = place;
+        this.name = b;
+        this.className = name;
         isSelected = false;
     }
 
-    public Course(String building, String className)
+    public Course(String building, String className, String classRoom)
     {
         this.name = building;
-        this.cname = className;
+        this.className = className;
+        this.classRoomName = classRoom;
+        isSelected = false;
     }
 
     public boolean isSelected()
@@ -38,12 +40,12 @@ public class Course implements Serializable
 
     public String toString()
     {
-        return name + "," + cname;
+        return name + "," + className + "," + classRoomName;
     }
 
-    public String getCname()
+    public String getClassName()
     {
-        return cname;
+        return className;
     }
 
     public Place getPlace()
@@ -64,5 +66,10 @@ public class Course implements Serializable
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public String getClassRoomName()
+    {
+        return classRoomName;
     }
 }
