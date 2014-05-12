@@ -14,6 +14,7 @@
     <string name="i_need_fragment_text">I Need...</string>
     <string name="where_am_i_title">Nearby Places</string>
     <string name="out_of_range">You are out of range of the University</string>
+    <string name="nearby_buildings">Nearby CU buildings will appear here</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="turn_on_debug">Turn debugging on.</string>
     <string name="debug_title">Debugging</string>

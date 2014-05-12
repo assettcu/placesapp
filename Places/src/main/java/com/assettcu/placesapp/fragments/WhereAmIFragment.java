@@ -7,7 +7,6 @@
 package com.assettcu.placesapp.fragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,8 +30,8 @@ import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +40,6 @@ import com.assettcu.placesapp.HomeActivity;
 import com.assettcu.placesapp.R;
 import com.assettcu.placesapp.models.Place;
 import com.google.android.gms.location.Geofence;
-import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -54,14 +52,12 @@ import java.util.List;
 public class WhereAmIFragment extends Fragment {
 
     public static final boolean createTestGeofences = false;  // Create Test ASSETT geofences
-
-    private ProgressDialog progress;
-    private ProgressBar progressBar;
     private ArrayAdapter<Place> adapter;
     private List<Place> places;
     private Place nearestBuilding;                // Manual building if use is not in any geofences
 
     private ListView listView;
+    private LinearLayout progressSpinner;
     private TextView outOfRangeTextView;
 
     private BroadcastReceiver receiver;
@@ -73,8 +69,8 @@ public class WhereAmIFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_where_am_i, container, false);
         listView = (ListView) view.findViewById(R.id.list_view);
+        progressSpinner = (LinearLayout) view.findViewById(R.id.progressSpinner);
         outOfRangeTextView = (TextView) view.findViewById(R.id.outofrange);
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         listView.setEmptyView(outOfRangeTextView);
 
         places = new ArrayList<Place>();
@@ -98,13 +94,11 @@ public class WhereAmIFragment extends Fragment {
             Log.d("Assett", "Got BuildingsArray. null = " + (buildingsJsonArray == null));
         }
 
-        progressBar.setVisibility(View.VISIBLE);
-        //progress = new ProgressDialog(getActivity());
         // If the JSON array hasn't been fetched yet, get it
         if(buildingsJsonArray == null) {
-            //progress.setTitle("Please wait");
-            //progress.setMessage("Loading Buildings...");
-            //progress.show();
+            progressSpinner.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.GONE);
+
             Ion.with(inflater.getContext()).load("http://places.colorado.edu/api/buildings").asJsonArray()
                     .setCallback(new FutureCallback<JsonArray>() {
                         @Override
@@ -150,16 +144,11 @@ public class WhereAmIFragment extends Fragment {
             ((HomeActivity) parent).removeGeofences();
         }
 
-        progressBar.setVisibility(View.INVISIBLE);
-        //progress.dismiss();
-
         super.onStop();
     }
 
     @Override
     public void onDestroyView() {
-        progressBar.setVisibility(View.INVISIBLE);
-        //progress.dismiss();
         super.onDestroyView();
     }
 
@@ -174,9 +163,6 @@ public class WhereAmIFragment extends Fragment {
 
                     if(triggerIds != null && triggerIds.length > 0) {
                         if (transitionType == Geofence.GEOFENCE_TRANSITION_ENTER) {
-//                            if(progress.isShowing())
-//                                progress.dismiss();
-                            progressBar.setVisibility(View.INVISIBLE);
 
                             if(nearestBuilding != null){
                                 adapter.remove(nearestBuilding);
@@ -282,13 +268,14 @@ public class WhereAmIFragment extends Fragment {
                     Double.valueOf(place.getLatitude()),
                     Double.valueOf(place.getLongitude()),
                     100);
-
-            progressBar.setProgress(i);
         }
 
         if(parent instanceof HomeActivity) {
             ((HomeActivity) parent).addGeofences(mGeofenceList);
         }
+
+        progressSpinner.setVisibility(View.GONE);
+        listView.setVisibility(View.VISIBLE);
 
         // Get the nearest building as a backup
         new WaitForGPSLockTask().execute();
@@ -330,11 +317,10 @@ public class WhereAmIFragment extends Fragment {
                     }
                 }
             }
+            else {
+                outOfRangeTextView.setText(R.string.out_of_range);
+            }
         }
-
-        progressBar.setVisibility(View.INVISIBLE);
-//        if(progress.isShowing())
-//            progress.dismiss();
     }
 
     public void addGeofence(String id, double latitude, double longitude, float radius){
@@ -387,16 +373,12 @@ public class WhereAmIFragment extends Fragment {
                 // waited less than 'waitTime' seconds for a GPS lock
                 while ((gps = getLocation()).getAccuracy() > LOCK_ACCURACY && waited < waitTime) {
                     try {
-                        Thread.sleep(250);
+                        Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-
-                    //currentProgress += 100*(25/gps.getAccuracy());
-                    progressBar.setProgress((int)(100*(LOCK_ACCURACY/gps.getAccuracy())));
                     waited++;
                 }
-                progressBar.setProgress(100);
                 // If the GPS obtained a lock: return true, otherwise: return false
                 //updateIntervalSpeed(5000, false);
                 return (gps.getAccuracy() <= LOCK_ACCURACY);
