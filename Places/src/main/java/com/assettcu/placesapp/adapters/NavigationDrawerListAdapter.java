@@ -2,6 +2,7 @@ package com.assettcu.placesapp.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,13 +53,12 @@ public class NavigationDrawerListAdapter extends BaseAdapter
         if (convertView == null)
         {
             // get layout from drawer_item
-            navListView = inflater.inflate(R.layout.drawer_item, null);
+            navListView = inflater.inflate(R.layout.drawer_item, parent, false);
 
             TextView textView = (TextView) navListView.findViewById(R.id.drawer_item_label);
-            ImageView imageView = (ImageView) navListView.findViewById(R.id.drawer_item_image);
 
             textView.setText(navHelper.getTitleAtPosition(position));
-            imageView.setImageResource(navHelper.getIconAtPosition(position));
+            textView.setCompoundDrawablesWithIntrinsicBounds(navHelper.getIconAtPosition(position), 0, 0, 0);
 
         } else
         {
