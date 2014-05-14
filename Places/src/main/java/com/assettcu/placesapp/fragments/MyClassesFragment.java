@@ -57,6 +57,7 @@ public class MyClassesFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view = inflater.inflate(R.layout.fragment_my_classes, container, false);
+        container.setBackgroundColor(getResources().getColor(android.R.color.white));
 
         classListView = (ListView) view.findViewById(R.id.class_list);
         classListView.setAdapter(courseListAdapter);

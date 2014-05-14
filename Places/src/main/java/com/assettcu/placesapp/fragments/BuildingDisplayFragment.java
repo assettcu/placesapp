@@ -83,6 +83,8 @@ public class BuildingDisplayFragment extends Fragment
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
         final ImageView buildingImage = (ImageView) view.findViewById(R.id.building_image);
 
+        container.setBackgroundColor(getResources().getColor(R.color.second_grey));
+
         Animation animation = new AlphaAnimation(0.0f, 1.0f);
         animation.setDuration(300);
 

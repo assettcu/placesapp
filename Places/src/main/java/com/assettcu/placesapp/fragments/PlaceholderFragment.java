@@ -46,6 +46,7 @@ public class PlaceholderFragment extends Fragment
         View rootView = inflater.inflate(R.layout.fragment_home, container, false);
         TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         textView.setText("Placeholder Fragment");
+        container.setBackgroundColor(getResources().getColor(android.R.color.white));
         return rootView;
     }
 

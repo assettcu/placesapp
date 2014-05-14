@@ -12,6 +12,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.ListFragment;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,8 +35,8 @@ import java.util.ArrayList;
 public class NavigateToBuildingFragment extends ListFragment {
 
     private ProgressDialog progress;
-    ArrayAdapter<String> adapter;
-    ArrayList<String> buildings;
+    ArrayAdapter<Spannable> adapter;
+    ArrayList<Spannable> buildings;
     JsonArray buildingsJsonArray;
     ArrayList<Place> places;
 
@@ -42,8 +45,8 @@ public class NavigateToBuildingFragment extends ListFragment {
     {
         super.onCreate(savedInstanceState);
 
-        buildings = new ArrayList<String>();
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, buildings);
+        buildings = new ArrayList<Spannable>();
+        adapter = new ArrayAdapter<Spannable>(getActivity(), android.R.layout.simple_list_item_1, buildings);
         places = new ArrayList<Place>();
         setListAdapter(adapter);
 
@@ -77,7 +80,7 @@ public class NavigateToBuildingFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        container.setBackgroundColor(getResources().getColor(android.R.color.white));
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -122,7 +125,8 @@ public class NavigateToBuildingFragment extends ListFragment {
                 String lat = jsonObject.get("latitude").getAsString();
                 String lon = jsonObject.get("longitude").getAsString();
 
-                adapter.add(buildingCode + " - " + placeName);
+                adapter.add(new SpannableString(Html.fromHtml(
+                        "<strong>" + buildingCode + "</strong> - " + placeName)));
 
                 Place place = new Place();
                 place.setPlaceID(placeId);
