@@ -23,6 +23,7 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
     private SparseArray<String[]> groups;
     private SparseArray<String> groupNames;
     private HashMap<String, Integer> roomId;
+    private HashMap<String, String> roomImageURL;
     private LayoutInflater inflater;
 
     public BuildingDisplayListAdapter(Activity activity)
@@ -30,6 +31,7 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
         groups = new SparseArray<String[]>();
         groupNames = new SparseArray<String>();
         roomId = new HashMap<String, Integer>();
+        roomImageURL = new HashMap<String, String>();
         inflater = activity.getLayoutInflater();
     }
 
@@ -47,6 +49,17 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
 
     public int getRoomId(String roomName){
         return roomId.get(roomName);
+    }
+
+    public void addRoomImageURL(String roomName, String url) {
+        roomImageURL.put(roomName, url);
+    }
+
+    public String getRoomImageURL(String roomName){
+        if(roomImageURL.containsKey(roomName))
+            return roomImageURL.get(roomName);
+        else
+            return null;
     }
 
     @Override

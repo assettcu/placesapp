@@ -151,9 +151,10 @@ public class BuildingDisplayFragment extends Fragment
             public boolean onChildClick(ExpandableListView parent, View v,int groupPosition, int childPosition, long id) {
                 String roomName = buildingInfo.getChild(groupPosition, childPosition);
                 int roomId = buildingInfo.getRoomId(roomName);
+                String roomImageURL = buildingInfo.getRoomImageURL(roomName);
                 Log.d("assett", "Room Name: " + roomName + " - Room ID: " + roomId);
 
-                RoomDisplayFragment fragment = RoomDisplayFragment.newInstance(roomName, roomId);
+                RoomDisplayFragment fragment = RoomDisplayFragment.newInstance(roomName, roomId, roomImageURL);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
                 fragmentManager.beginTransaction()
@@ -208,8 +209,10 @@ public class BuildingDisplayFragment extends Fragment
                 JsonObject room = classroomsJsonArray.get(i).getAsJsonObject();
                 String roomName = room.get("placename").getAsString().toUpperCase();
                 int roomId = room.get("placeid").getAsInt();
+                String roomImageURL = room.get("path").getAsString();
                 classrooms[i] = roomName;
                 buildingInfo.addRoomId(roomName, roomId);
+                buildingInfo.addRoomImageURL(roomName, roomImageURL);
             }
             buildingInfo.setGroupData(2, classrooms, "Classrooms (" + classrooms.length + ")");
         }
