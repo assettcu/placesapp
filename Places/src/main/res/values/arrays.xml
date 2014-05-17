@@ -8,4 +8,12 @@
         <item>@string/title_section5</item>
         <item>@string/title_section6</item>
     </string-array>
+
+    <string-array name="bug_types">
+        <item>Crash</item>
+        <item>User Interface</item>
+        <item>Functionality</item>
+        <item>Usability</item>
+        <item>Other</item>
+    </string-array>
 </resources>

@@ -1,7 +1,6 @@
 package com.assettcu.placesapp.fragments;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -21,7 +20,7 @@ import com.assettcu.placesapp.R;
 public class ReportABugFragment extends Fragment
 {
 
-    private Spinner spinner;
+    private Spinner interactionSpinner, typeSpinner;
     private EditText editText;
 
     @Override
@@ -35,10 +34,15 @@ public class ReportABugFragment extends Fragment
     {
         View view = inflater.inflate(R.layout.fragment_report_a_bug, container, false);
 
-        spinner = (Spinner) view.findViewById(R.id.interactionSpinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+        interactionSpinner = (Spinner) view.findViewById(R.id.interaction_spinner);
+        ArrayAdapter<CharSequence> interactionAdapter = ArrayAdapter.createFromResource(getActivity(),
                 R.array.interaction_points, R.layout.spinner_item);
-        spinner.setAdapter(adapter);
+        interactionSpinner.setAdapter(interactionAdapter);
+
+        typeSpinner = (Spinner) view.findViewById(R.id.type_spinner);
+        ArrayAdapter<CharSequence> typeAdapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.bug_types, R.layout.spinner_item);
+        typeSpinner.setAdapter(typeAdapter);
 
         Button report = (Button) view.findViewById(R.id.reportButton);
         setReportButtonListener(report);
@@ -50,8 +54,10 @@ public class ReportABugFragment extends Fragment
 
     public void sendReport()
     {
-        Toast.makeText(getActivity(), "Sent report about "
-                + spinner.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Sent report about problems with "
+                + interactionSpinner.getSelectedItem().toString() + " regarding a(n) "
+                + typeSpinner.getSelectedItem().toString()
+                + " type error or bug. Thanks for your input!", Toast.LENGTH_LONG).show();
         editText.setText("", null);
     }
 
@@ -67,17 +73,8 @@ public class ReportABugFragment extends Fragment
                 if(editText.getText().length() == 0)
                 {
                     AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-                    dialog.setNegativeButton("No", null);
-                    dialog.setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which)
-                        {
-                            sendReport();
-                        }
-                    });
-
-                    dialog.setTitle("Are you sure you want to send a report with no comments?");
+                    dialog.setPositiveButton("Alright...", null);
+                    dialog.setTitle("Please include a comment.");
                     dialog.show();
                 }
                 else

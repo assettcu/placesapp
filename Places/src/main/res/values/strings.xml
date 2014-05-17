@@ -16,7 +16,8 @@
     <string name="out_of_range">You are out of range of the University</string>
     <string name="nearby_buildings">Nearby CU buildings will appear here</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
+    <string name="type_of_bug">Type of Bug</string>
+    <string name="bug_description_hint">Describe the bug or error in detail.
+        Include observations about functionality and usability.</string>
 
 </resources>

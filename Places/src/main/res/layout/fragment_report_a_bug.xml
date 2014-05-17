@@ -1,21 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout
+<LinearLayout
+    android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+    android:id="@+id/linearLayout">
 
-    <Button
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@android:style/TextAppearance.Large"
+        android:text="Interface"
+        android:id="@+id/bugInterfaceText"
+        android:layout_gravity="left|top"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"/>
+
+    <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Report"
-        android:id="@+id/reportButton"
-        android:layout_gravity="center_horizontal|bottom"
-        android:background="@drawable/report_button_background"
-        android:visibility="visible"
-        android:fontFamily="sans-serif-light"
-        android:focusableInTouchMode="false"/>
+        android:id="@+id/interaction_spinner"
+        android:layout_gravity="left|top"
+        android:focusable="false"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/type_of_bug"
+        android:id="@+id/bugTypeText"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"/>
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/type_spinner"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@android:style/TextAppearance.Large"
+        android:text="Comments"
+        android:id="@+id/comments"
+        android:layout_gravity="left|center_vertical"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="10dp"/>
 
     <EditText
         android:layout_width="match_parent"
@@ -24,37 +58,19 @@
         android:ems="10"
         android:id="@+id/commentText"
         android:layout_gravity="center"
-        android:hint="Describe the bug."
-        android:layout_marginTop="-60dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@android:style/TextAppearance.Large"
-        android:text="Bug Location"
-        android:id="@+id/bugLoc"
-        android:layout_gravity="left|top"
+        android:hint="@string/bug_description_hint"
         android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"/>
+        android:layout_weight="0.9"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@android:style/TextAppearance.Large"
-        android:text="Comments"
-        android:id="@+id/comments"
-        android:layout_gravity="left|top"
-        android:layout_marginTop="120dp"
-        android:layout_marginLeft="10dp"/>
-
-    <Spinner
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/interactionSpinner"
-        android:layout_gravity="left|top"
-        android:focusable="false"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="50dp"
-        />
-
-</FrameLayout>
+        android:text="Report"
+        android:id="@+id/reportButton"
+        android:background="@drawable/report_button_background"
+        android:visibility="visible"
+        android:fontFamily="sans-serif-light"
+        android:focusableInTouchMode="false"
+        android:layout_marginTop="30dp"
+        android:layout_weight="0.1"/>
+</LinearLayout>
