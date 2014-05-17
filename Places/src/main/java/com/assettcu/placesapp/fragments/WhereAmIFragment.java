@@ -33,11 +33,11 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.assettcu.placesapp.adapters.WhereAmIListAdapter;
-import com.assettcu.placesapp.HomeActivity;
 import com.assettcu.placesapp.R;
+import com.assettcu.placesapp.activities.HomeActivity;
+import com.assettcu.placesapp.adapters.WhereAmIListAdapter;
+import com.assettcu.placesapp.helpers.DebugMode;
 import com.assettcu.placesapp.models.Place;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.LocationRequest;
@@ -176,8 +176,8 @@ public class WhereAmIFragment extends Fragment {
                                         Log.d("Places", p.getPlaceName() + ": " + p.getImageURL());
 
                                         // Debug toast to see what geofences were entered
-                                        Toast.makeText(getActivity(), "Entered: "
-                                                + TextUtils.join(", ", triggerIds), Toast.LENGTH_SHORT).show();
+                                        DebugMode.makeToast(getActivity(), "Entered: "
+                                                + TextUtils.join(", ", triggerIds));
                                     }
                                 }
                             }
@@ -196,8 +196,8 @@ public class WhereAmIFragment extends Fragment {
                             }
 
                             // Debug toast to see what geofences were exited
-                            Toast.makeText(getActivity(), "Exited: "
-                                    + TextUtils.join(", ", triggerIds), Toast.LENGTH_SHORT).show();
+                            DebugMode.makeToast(getActivity(), "Exited: "
+                                    + TextUtils.join(", ", triggerIds));
                         }
                     }
                 }
@@ -313,7 +313,7 @@ public class WhereAmIFragment extends Fragment {
                     if (p.getPlaceName().equals(buildingName)) {
                         adapter.add(p);
                         nearestBuilding = p;
-                        Toast.makeText(getActivity(), "Manually Added: " + buildingName, Toast.LENGTH_SHORT).show();
+                        DebugMode.makeToast(getActivity(), "Manually Added: " + buildingName);
                     }
                 }
             }
@@ -366,21 +366,31 @@ public class WhereAmIFragment extends Fragment {
             int waited = 0;                    // Seconds waited for a GPS lock
             Location gps = getLocation();     // Current GPS location
 
-            //updateIntervalSpeed(100, true);
+            // Increase the interval speed needed to get a lock
+            updateIntervalSpeed(100, true);
 
             if(gps != null) {
                 // While the GPS accuracy is worse than 25 meters AND the user has
                 // waited less than 'waitTime' seconds for a GPS lock
-                while ((gps = getLocation()).getAccuracy() > LOCK_ACCURACY && waited < waitTime) {
+                while (true) {
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(250);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+
+                    gps = getLocation();
+                    if(gps != null)
+                    {
+                        if(gps.getAccuracy() >= LOCK_ACCURACY || waited > waitTime) break;
+                    }
+
                     waited++;
                 }
+
                 // If the GPS obtained a lock: return true, otherwise: return false
-                //updateIntervalSpeed(5000, false);
+                // Set the interval speed back to normal
+                updateIntervalSpeed(5000, false);
                 return (gps.getAccuracy() <= LOCK_ACCURACY);
             }
 

@@ -1,4 +1,4 @@
-package com.assettcu.placesapp;
+package com.assettcu.placesapp.activities;
 
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -15,11 +15,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.assettcu.placesapp.R;
 import com.assettcu.placesapp.fragments.BuildingDisplayFragment;
 import com.assettcu.placesapp.fragments.NavigationDrawerFragment;
+import com.assettcu.placesapp.helpers.DebugMode;
 import com.assettcu.placesapp.helpers.NavigationHelper;
 import com.assettcu.placesapp.helpers.ReceiveTransitionsIntentService;
 import com.google.android.gms.common.ConnectionResult;
@@ -111,18 +111,25 @@ public class HomeActivity extends ActionBarActivity
 
         if(position <= navigationHelper.getNumSupportedFragments())
         {
-            //Go to the supported fragment
+            // Get the data about the selected fragment
             fragment = navigationHelper.getFragmentAtPosition(position);
             mTitle = navigationHelper.getTitleAtPosition(position);
+
+            if(mTitle.equals("Settings"))
+            {
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return;
+            }
         }
         else
         {
-            //Go to the home fragment by default
             fragment = navigationHelper.getFragmentAtPosition(0);
             mTitle = navigationHelper.getTitleAtPosition(position);
         }
 
         fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+
     }
 
     public void restoreActionBar() {
@@ -154,10 +161,6 @@ public class HomeActivity extends ActionBarActivity
         return item.getItemId() == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
-    public void makeToast(String toast) {
-        Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
-    }
-
     public void addGeofences(List<Geofence> mGeofenceList) {
         if(mLocationClient.isConnected()) {
             intent = new Intent(this, ReceiveTransitionsIntentService.class);
@@ -178,10 +181,10 @@ public class HomeActivity extends ActionBarActivity
     @Override
     public void onRemoveGeofencesByPendingIntentResult(int statusCode,PendingIntent requestIntent) {
         if (statusCode == LocationStatusCodes.SUCCESS) {
-            makeToast("Removed all Geofences");
+            DebugMode.makeToast(this, "Removed all Geofences");
         }
         else {
-            makeToast("Failed to remove Geofences");
+            DebugMode.makeToast(this, "Failed to remove Geofences");
         }
     }
 
@@ -225,10 +228,10 @@ public class HomeActivity extends ActionBarActivity
     @Override
     public void onAddGeofencesResult(int i, String[] strings) {
         if (LocationStatusCodes.SUCCESS == i) {
-            Toast.makeText(this, "Added " + strings.length + " Geofences", Toast.LENGTH_SHORT).show();
+            DebugMode.makeToast(this, "Added " + strings.length + " Geofences");
         }
         else {
-            Toast.makeText(this, "Failed to add Geofences", Toast.LENGTH_SHORT).show();
+            DebugMode.makeToast(this, "Failed to add Geofences");
         }
     }
 
@@ -237,7 +240,7 @@ public class HomeActivity extends ActionBarActivity
     {
         double latitude = Double.parseDouble(lat);
         double longitude = Double.parseDouble(lon);
-        Toast.makeText(this, latitude + "," + longitude, Toast.LENGTH_LONG).show();
+        DebugMode.makeToast(this, latitude + "," + longitude);
         //Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + latitude + "," + longitude));
         Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(
                 "http://maps.google.com/maps?daddr=" + latitude + "," + longitude + "&dirflg=w"));

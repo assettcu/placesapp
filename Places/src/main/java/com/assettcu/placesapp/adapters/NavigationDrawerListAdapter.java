@@ -2,12 +2,10 @@ package com.assettcu.placesapp.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.assettcu.placesapp.R;
@@ -59,8 +57,8 @@ public class NavigationDrawerListAdapter extends BaseAdapter
 
             textView.setText(navHelper.getTitleAtPosition(position));
             textView.setCompoundDrawablesWithIntrinsicBounds(navHelper.getIconAtPosition(position), 0, 0, 0);
-
-        } else
+        }
+        else
         {
             navListView = convertView;
         }

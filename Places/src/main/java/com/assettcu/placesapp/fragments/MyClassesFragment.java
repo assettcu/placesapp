@@ -1,12 +1,10 @@
 package com.assettcu.placesapp.fragments;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +26,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MyClassesFragment extends Fragment
 {
     private CourseListAdapter courseListAdapter;
@@ -84,7 +81,7 @@ public class MyClassesFragment extends Fragment
             public void onClick(View v)
             {
                 DialogFragment newFragment = CourseDialogFragment.newInstance(null, courseListAdapter);
-                newFragment.show(getActivity().getFragmentManager(), "dialog");
+                newFragment.show(getActivity().getSupportFragmentManager(), "dialog");
                 writeCourseFile();
             }
         });

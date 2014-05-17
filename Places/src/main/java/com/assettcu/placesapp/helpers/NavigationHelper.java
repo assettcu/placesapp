@@ -8,6 +8,7 @@ import com.assettcu.placesapp.fragments.MyClassesFragment;
 import com.assettcu.placesapp.fragments.NavigateToBuildingFragment;
 import com.assettcu.placesapp.fragments.NeedFragment;
 import com.assettcu.placesapp.fragments.PlaceholderFragment;
+import com.assettcu.placesapp.fragments.ReportABugFragment;
 import com.assettcu.placesapp.fragments.WhereAmIFragment;
 
 /**
@@ -28,7 +29,7 @@ public class NavigationHelper
         fragmentArray[1] = new NavigateToBuildingFragment();
         fragmentArray[2] = new NeedFragment();
         fragmentArray[3] = new MyClassesFragment();
-        fragmentArray[4] = new PlaceholderFragment();
+        fragmentArray[4] = new ReportABugFragment();
         fragmentArray[5] = new PlaceholderFragment();
 
         titleArray[0] = parent.getString(R.string.title_section1);

@@ -1,12 +1,10 @@
 package com.assettcu.placesapp.fragments;
 
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import com.assettcu.placesapp.HomeActivity;
 import com.assettcu.placesapp.R;
+import com.assettcu.placesapp.activities.HomeActivity;
 import com.assettcu.placesapp.adapters.CourseListAdapter;
 import com.assettcu.placesapp.models.Course;
 import com.google.gson.JsonArray;
@@ -27,7 +25,6 @@ import com.koushikdutta.ion.Ion;
 /**
  * Created by Aaron on 5/6/2014.
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class CourseDialogFragment extends DialogFragment
 {
     private static final String CLASS_ARG = "class";

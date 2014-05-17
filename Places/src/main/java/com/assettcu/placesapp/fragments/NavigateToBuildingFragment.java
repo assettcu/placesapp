@@ -22,8 +22,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.assettcu.placesapp.HomeActivity;
 import com.assettcu.placesapp.R;
+import com.assettcu.placesapp.activities.HomeActivity;
 import com.assettcu.placesapp.models.Place;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
