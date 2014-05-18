@@ -78,7 +78,7 @@ public class BuildingDisplayFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_building_display, container, false);
 
         expandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
-        expandableListView.addHeaderView(inflater.inflate(R.layout.image_holder, null, false));
+        expandableListView.addHeaderView(inflater.inflate(R.layout.image_holder, null));
         TextView buildingText = (TextView) view.findViewById(R.id.building_name);
         final ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progress);
         final ImageView buildingImage = (ImageView) view.findViewById(R.id.building_image);
