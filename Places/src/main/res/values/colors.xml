@@ -8,4 +8,9 @@
     <color name="nav_light_grey">#C5C5C5</color>
     <color name="action_bar_color">#1686AB</color>
     <color name="nav_selected">#EEEEEE</color>
+
+    <!-- Offical CU Boulder Colors -->
+    <color name="cu_gold">#CFB87C</color>
+    <color name="cu_dark_gray">#565A5C</color>
+    <color name="cu_light_gray">#A2A4A3</color>
 </resources>

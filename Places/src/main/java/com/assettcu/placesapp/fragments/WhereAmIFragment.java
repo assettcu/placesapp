@@ -122,7 +122,8 @@ public class WhereAmIFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Place place = adapter.getItem(position);
-                BuildingDisplayFragment fragment = BuildingDisplayFragment.newInstance(place);
+                //BuildingDisplayFragment fragment = BuildingDisplayFragment.newInstance(place);
+                BuildingViewPagerFragment fragment = BuildingViewPagerFragment.newInstance(place);
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
@@ -382,7 +383,7 @@ public class WhereAmIFragment extends Fragment {
                     gps = getLocation();
                     if(gps != null)
                     {
-                        if(gps.getAccuracy() >= LOCK_ACCURACY || waited > waitTime) break;
+                        if(gps.getAccuracy() <= LOCK_ACCURACY || waited > waitTime) break;
                     }
 
                     waited++;
