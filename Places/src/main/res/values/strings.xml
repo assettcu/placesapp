@@ -6,12 +6,18 @@
     <string name="title_section2">Navigate to Building</string>
     <string name="title_section3">I Need...</string>
     <string name="title_section4">My Classes</string>
+    <string name="title_section5">Report a Bug</string>
+    <string name="title_section6">Settings</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_settings">Settings</string>
     <string name="i_need_fragment_text">I Need...</string>
     <string name="where_am_i_title">Nearby Places</string>
     <string name="out_of_range">You are out of range of the University</string>
+    <string name="nearby_buildings">Nearby CU buildings will appear here</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="type_of_bug">Type of Bug</string>
+    <string name="bug_description_hint">Describe the bug or error in detail.
+        Include observations about functionality and usability.</string>
 
 </resources>

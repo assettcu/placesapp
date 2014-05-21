@@ -1,4 +1,4 @@
-package com.assettcu.placesapp;
+package com.assettcu.placesapp.activities;
 
 import android.app.Dialog;
 import android.app.PendingIntent;
@@ -15,10 +15,11 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.assettcu.placesapp.R;
 import com.assettcu.placesapp.fragments.BuildingDisplayFragment;
 import com.assettcu.placesapp.fragments.NavigationDrawerFragment;
+import com.assettcu.placesapp.helpers.DebugMode;
 import com.assettcu.placesapp.helpers.NavigationHelper;
 import com.assettcu.placesapp.helpers.ReceiveTransitionsIntentService;
 import com.google.android.gms.common.ConnectionResult;
@@ -29,6 +30,7 @@ import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationStatusCodes;
+import com.google.gson.JsonArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +54,8 @@ public class HomeActivity extends ActionBarActivity
     private LocationRequest mLocationRequest;
     private LocationClient mLocationClient;
 
+    private JsonArray buildingsJsonArray;
+
     PendingIntent pendIntent;
     Intent intent;
     List<String> places;
@@ -60,12 +64,12 @@ public class HomeActivity extends ActionBarActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         navigationHelper = new NavigationHelper(this);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+
         mTitle = getTitle();
 
         // Set up the drawer.
@@ -73,7 +77,6 @@ public class HomeActivity extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
         places = new ArrayList<String>();
-
 
         mLocationRequest = LocationRequest.create();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -108,18 +111,25 @@ public class HomeActivity extends ActionBarActivity
 
         if(position <= navigationHelper.getNumSupportedFragments())
         {
-            //Go to the supported fragment
+            // Get the data about the selected fragment
             fragment = navigationHelper.getFragmentAtPosition(position);
             mTitle = navigationHelper.getTitleAtPosition(position);
+
+            if(mTitle.equals("Settings"))
+            {
+                Intent intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
+                return;
+            }
         }
         else
         {
-            //Go to the home fragment by default
             fragment = navigationHelper.getFragmentAtPosition(0);
             mTitle = navigationHelper.getTitleAtPosition(position);
         }
 
         fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+
     }
 
     public void restoreActionBar() {
@@ -128,7 +138,6 @@ public class HomeActivity extends ActionBarActivity
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -151,10 +160,6 @@ public class HomeActivity extends ActionBarActivity
         return item.getItemId() == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
-    public void makeToast(String toast) {
-        Toast.makeText(this, toast, Toast.LENGTH_SHORT).show();
-    }
-
     public void addGeofences(List<Geofence> mGeofenceList) {
         if(mLocationClient.isConnected()) {
             intent = new Intent(this, ReceiveTransitionsIntentService.class);
@@ -175,10 +180,10 @@ public class HomeActivity extends ActionBarActivity
     @Override
     public void onRemoveGeofencesByPendingIntentResult(int statusCode,PendingIntent requestIntent) {
         if (statusCode == LocationStatusCodes.SUCCESS) {
-            makeToast("Removed all Geofences");
+            DebugMode.makeToast(this, "Removed all Geofences");
         }
         else {
-            makeToast("Failed to remove Geofences");
+            DebugMode.makeToast(this, "Failed to remove Geofences");
         }
     }
 
@@ -222,10 +227,10 @@ public class HomeActivity extends ActionBarActivity
     @Override
     public void onAddGeofencesResult(int i, String[] strings) {
         if (LocationStatusCodes.SUCCESS == i) {
-            Toast.makeText(this, "Added " + strings.length + " Geofences", Toast.LENGTH_SHORT).show();
+            DebugMode.makeToast(this, "Added " + strings.length + " Geofences");
         }
         else {
-            Toast.makeText(this, "Failed to add Geofences", Toast.LENGTH_SHORT).show();
+            DebugMode.makeToast(this, "Failed to add Geofences");
         }
     }
 
@@ -234,15 +239,11 @@ public class HomeActivity extends ActionBarActivity
     {
         double latitude = Double.parseDouble(lat);
         double longitude = Double.parseDouble(lon);
-        Toast.makeText(this, latitude + "," + longitude, Toast.LENGTH_LONG).show();
+        DebugMode.makeToast(this, latitude + "," + longitude);
         //Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("google.navigation:q=" + latitude + "," + longitude));
         Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(
                 "http://maps.google.com/maps?daddr=" + latitude + "," + longitude + "&dirflg=w"));
         startActivity(i);
-
-//        Toast.makeText(this, "building :" + buildings.get(position),
-//                Toast.LENGTH_LONG).show();
-
     }
 
     // Define a DialogFragment that displays the error dialog
@@ -279,6 +280,21 @@ public class HomeActivity extends ActionBarActivity
 
     @Override
     public void onLocationChanged(Location location) { }
+
+    public LocationRequest getLocationRequest()
+    {
+        return mLocationRequest;
+    }
+
+    // Get the buildingsJsonArray. Can return null.
+    public JsonArray getBuildingsJsonArray() {
+        return buildingsJsonArray;
+    }
+
+    // Set the buildingsJsonArray
+    public void setBuildingsJsonArray(JsonArray buildingsJsonArray) {
+        this.buildingsJsonArray = buildingsJsonArray;
+    }
 
     // Get the current location. Can return null.
     public Location getLocation() {

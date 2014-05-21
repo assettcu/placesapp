@@ -1,23 +1,15 @@
 package com.assettcu.placesapp.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.ListView;
 
 import com.assettcu.placesapp.R;
-
-import java.util.ArrayList;
+import com.assettcu.placesapp.adapters.NeedAdapter;
 
 /**
  * file: NeedFragment.java
@@ -28,26 +20,7 @@ import java.util.ArrayList;
 public class NeedFragment extends Fragment
 {
 
-    private GridView gridView;
-
-    // references to our images
-    public Integer[] mThumbIds =
-            {
-                    R.drawable.printer,
-                    R.drawable.ryan,
-                    R.drawable.derek,
-                    R.drawable.aaron,
-                    R.drawable.trent
-            };
-
-    public CharSequence[] mThumbTitles =
-            {
-                    "A printer",
-                    "A Ryan",
-                    "A Derek",
-                    "An Aaron",
-                    "A Trent"
-            };
+    private ListView listView;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -60,24 +33,10 @@ public class NeedFragment extends Fragment
     {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_need, container, false);
-        gridView = (GridView) view.findViewById(R.id.gridView);
-        gridView.setAdapter(new ImageAdapter(this.getActivity()));
+        listView = (ListView) view.findViewById(R.id.needListView);
+        listView.setAdapter(new NeedAdapter(this.getActivity()));
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id)
-            {
-                if (position != 4)
-                {
-                    Toast.makeText(getActivity(), "You need " + mThumbTitles[position].toString().toLowerCase() + ".", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    Toast.makeText(getActivity(), "You most definitely do not need " + mThumbTitles[position].toString().toLowerCase() + ".", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
+        container.setBackgroundColor(getResources().getColor(android.R.color.white));
 
         return view;
     }
@@ -94,58 +53,6 @@ public class NeedFragment extends Fragment
         super.onDetach();
     }
 
-    public class ImageAdapter extends BaseAdapter
-    {
-        private Context mContext;
 
-        public ImageAdapter(Context c)
-        {
-            mContext = c;
-        }
-
-        public int getCount()
-        {
-            return mThumbIds.length;
-        }
-
-        public Object getItem(int position)
-        {
-            return null;
-        }
-
-        public long getItemId(int position)
-        {
-            return 0;
-        }
-
-        // create a new ImageView for each item referenced by the Adapter
-        public View getView(int position, View convertView, ViewGroup parent)
-        {
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View gridView;
-
-            if (convertView == null)
-            {  // if it's not recycled, initialize some attributes
-                gridView = new View(mContext);
-
-                // get layout from adapter_grid_item
-                gridView = inflater.inflate(R.layout.adapter_grid_item, null);
-
-                TextView textView = (TextView) gridView.findViewById(R.id.grid_item_label);
-                ImageView imageView = (ImageView) gridView.findViewById(R.id.grid_item_image);
-
-                textView.setText(mThumbTitles[position]);
-                imageView.setImageResource(mThumbIds[position]);
-
-            } else
-            {
-                gridView = (View) convertView;
-            }
-
-            return gridView;
-        }
-
-
-    }
 
 }

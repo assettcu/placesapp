@@ -11,12 +11,13 @@
         android:padding="10dp"
         android:background="@drawable/card">
 
-        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        <TextView
             android:id="@+id/text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:textColor="#707070"
+            android:drawableEnd="@drawable/ic_action_next_item"
             style="@android:style/TextAppearance.Large"
             android:gravity="center_vertical" />
 
@@ -27,7 +28,7 @@
 
         <ImageView
             android:id="@+id/icon"
-            android:maxHeight="200dp"
+            android:maxHeight="150dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"

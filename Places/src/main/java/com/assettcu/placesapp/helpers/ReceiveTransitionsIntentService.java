@@ -10,14 +10,14 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.LocationClient;
 
 import java.util.List;
-import android.os.Vibrator;
 
 public class ReceiveTransitionsIntentService extends IntentService {
 

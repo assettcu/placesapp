@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_gravity="top"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content" >
+
+    <EditText
+        android:id="@+id/class_name_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textColor="#000000"
+        android:hint="Class Name"
+        android:inputType="textCapCharacters"/>
+
+
+    <Spinner
+        android:id="@+id/building_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"/>
+
+    <Spinner
+        android:id="@+id/classrooms_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"/>
+
+
+</LinearLayout>

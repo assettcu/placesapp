@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:focusable="false"
+    android:paddingBottom="5dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Class Name"
+        android:id="@+id/class_list_name"
+        android:textColor="#234c54"
+        android:textSize="30sp"
+        android:layout_gravity="top"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="80dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Building Name"
+        android:id="@+id/building_list_name"
+        android:textSize="20sp"
+        android:textColor="#474747"
+        android:layout_gravity="left|top"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="80dp"/>
+
+    <CheckBox
+        android:focusable="false"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/class_check_box"
+        android:layout_gravity="left|top"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="30dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Class Room"
+        android:id="@+id/class_room_name"
+        android:layout_gravity="left|top"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="65dp"/>
+
+</FrameLayout>

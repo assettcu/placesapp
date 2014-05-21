@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.assettcu.placesapp.R;
@@ -22,15 +21,6 @@ public class NavigationDrawerListAdapter extends BaseAdapter
     private Context mContext;
     private NavigationHelper navHelper;
 
-    private Integer[] iconArray =
-            {
-                // Icon placeholders until we find better ones
-                android.R.drawable.ic_menu_mylocation,
-                android.R.drawable.ic_menu_directions,
-                android.R.drawable.ic_menu_info_details,
-                android.R.drawable.ic_menu_agenda
-            };
-
     public NavigationDrawerListAdapter(Context c)
     {
         mContext = c;
@@ -39,7 +29,7 @@ public class NavigationDrawerListAdapter extends BaseAdapter
 
     public int getCount()
     {
-        return iconArray.length;
+        return navHelper.getNumSupportedFragments() + 1;
     }
 
     public Object getItem(int position)
@@ -59,22 +49,18 @@ public class NavigationDrawerListAdapter extends BaseAdapter
         View navListView;
 
         if (convertView == null)
-        {  // if it's not recycled, initialize some attributes
-
-            navListView = new View(mContext);
-
+        {
             // get layout from drawer_item
-            navListView = inflater.inflate(R.layout.drawer_item, null);
+            navListView = inflater.inflate(R.layout.drawer_item, parent, false);
 
             TextView textView = (TextView) navListView.findViewById(R.id.drawer_item_label);
-            ImageView imageView = (ImageView) navListView.findViewById(R.id.drawer_item_image);
 
             textView.setText(navHelper.getTitleAtPosition(position));
-            imageView.setImageResource(iconArray[position]);
-
-        } else
+            textView.setCompoundDrawablesWithIntrinsicBounds(navHelper.getIconAtPosition(position), 0, 0, 0);
+        }
+        else
         {
-            navListView = (View) convertView;
+            navListView = convertView;
         }
 
         return navListView;

@@ -2,15 +2,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="fill_parent"
-              android:layout_height="wrap_content">
+              android:layout_height="wrap_content"
+              android:measureWithLargestChild="false">
 
     <TextView android:id="@+id/child_row_text"
-              android:paddingLeft="50dp"
-              android:paddingTop="5dp"
+              android:paddingLeft="30dp"
+              android:paddingTop="8dp"
+              android:paddingBottom="8dp"
               android:focusable="false"
-              android:textSize="15sp"
-              android:textStyle="normal"
-              android:layout_width="match_parent"
-              android:layout_height="30dp"/>
+              android:textColor="#707070"
+              style="@android:style/TextAppearance.Medium"
+              android:layout_width="0dp"
+              android:layout_weight="1"
+              android:layout_height="wrap_content"/>
+
+    <ImageView
+        android:id="@+id/child_row_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_action_next_item"/>
 
 </LinearLayout>

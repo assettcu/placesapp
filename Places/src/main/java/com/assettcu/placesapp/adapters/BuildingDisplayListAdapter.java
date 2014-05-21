@@ -1,38 +1,65 @@
 package com.assettcu.placesapp.adapters;
 
 import android.app.Activity;
+import android.text.Html;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.assettcu.placesapp.R;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * Created by Aaron on 4/24/2014.
- * Deals with displaying an exandable list.
+ * Deals with displaying an expandable list.
  */
 public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
 {
-    private HashMap<Integer, String[]> groups;
-    private HashMap<Integer, String> groupNames;
+    private SparseArray<String[]> groups;
+    private SparseArray<String> groupNames;
+    private HashMap<String, Integer> roomId;
+    private HashMap<String, String> roomImageURL;
     private LayoutInflater inflater;
 
     public BuildingDisplayListAdapter(Activity activity)
     {
-        groups = new HashMap<Integer, String[]>();
-        groupNames = new HashMap<Integer, String>();
+        groups = new SparseArray<String[]>();
+        groupNames = new SparseArray<String>();
+        roomId = new HashMap<String, Integer>();
+        roomImageURL = new HashMap<String, String>();
         inflater = activity.getLayoutInflater();
     }
 
-    public void addDataToGroup(int groupPosition, String[] values, String groupName)
+    public void setGroupData(int groupPosition, String[] values, String groupName)
     {
+        if(values.length == 0) return;
+
         groups.put(groupPosition, values);
         groupNames.put(groupPosition, groupName);
+    }
+
+    public void addRoomId(String roomName, int id) {
+        roomId.put(roomName, id);
+    }
+
+    public int getRoomId(String roomName){
+        return roomId.get(roomName);
+    }
+
+    public void addRoomImageURL(String roomName, String url) {
+        roomImageURL.put(roomName, url);
+    }
+
+    public String getRoomImageURL(String roomName){
+        if(roomImageURL.containsKey(roomName))
+            return roomImageURL.get(roomName);
+        else
+            return null;
     }
 
     @Override
@@ -54,9 +81,9 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition)
+    public String getChild(int groupPosition, int childPosition)
     {
-        return null;
+        return groups.get(groupPosition)[childPosition];
     }
 
     @Override
@@ -83,7 +110,6 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
         if(convertView == null)
         {
             convertView = inflater.inflate(R.layout.adapter_group_row, null);
-
             TextView text = (TextView) convertView.findViewById(R.id.group_row_text);
             text.setText(groupNames.get(groupPosition));
         }
@@ -99,19 +125,23 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent)
     {
-
         if(convertView == null)
         {
             convertView = inflater.inflate(R.layout.adapter_child_row, null);
-
             TextView text = (TextView) convertView.findViewById(R.id.child_row_text);
-            text.setText(groups.get(groupPosition)[childPosition]);
+            text.setText(Html.fromHtml(groups.get(groupPosition)[childPosition]));
         }
         else
         {
             TextView text = (TextView) convertView.findViewById(R.id.child_row_text);
-            text.setText(groups.get(groupPosition)[childPosition]);
+            text.setText(Html.fromHtml(groups.get(groupPosition)[childPosition]));
         }
+
+        ImageView arrow = (ImageView) convertView.findViewById(R.id.child_row_arrow);
+        if(isChildSelectable(groupPosition, childPosition))
+            arrow.setVisibility(View.VISIBLE);
+        else
+            arrow.setVisibility(View.GONE);
 
         return convertView;
     }
@@ -119,6 +149,6 @@ public class BuildingDisplayListAdapter extends BaseExpandableListAdapter
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition)
     {
-        return false;
+        return groupPosition >= 2;
     }
 }

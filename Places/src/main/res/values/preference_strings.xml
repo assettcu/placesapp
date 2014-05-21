@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="pref_debug_option">Turn debugging on.</string>
+    <string name="pref_debug_title">Debugging</string>
+    <string name="pref_view_title">Classroom View</string>
+    <string name="pref_view_option">Use expanded mode.</string>
+    <string name="pref_view_summary">Show classroom information and pictures.</string>
+    <string name="pref_beef">Order roast beef.</string>
+    <string name="pref_beef_summary">It\'s really quite lovely.</string>
+</resources>

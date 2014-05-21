@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/pref_debug_title"
+        android:key="pref_debug">
+
+        <CheckBoxPreference
+            android:title="@string/pref_debug_option"
+            android:key="pref_key_debug_toggle"/>
+
+        </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/pref_view_title"
+        android:key="pref_key_view">
+
+        <CheckBoxPreference
+            android:title="@string/pref_view_option"
+            android:key="pref_key_class_view"
+            android:summary="@string/pref_view_summary"/>
+
+        <CheckBoxPreference
+            android:title="@string/pref_beef"
+            android:key="pref_key_beef"
+            android:summary="@string/pref_beef_summary"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

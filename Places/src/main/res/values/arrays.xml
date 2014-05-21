@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="interaction_points">
+        <item>@string/title_section1</item>
+        <item>@string/title_section2</item>
+        <item>@string/title_section3</item>
+        <item>@string/title_section4</item>
+        <item>@string/title_section5</item>
+        <item>@string/title_section6</item>
+    </string-array>
+
+    <string-array name="bug_types">
+        <item>Crash</item>
+        <item>User Interface</item>
+        <item>Functionality</item>
+        <item>Usability</item>
+        <item>Other</item>
+    </string-array>
+</resources>
