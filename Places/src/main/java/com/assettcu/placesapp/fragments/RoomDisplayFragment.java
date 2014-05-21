@@ -18,28 +18,27 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.assettcu.placesapp.R;
+import com.assettcu.placesapp.models.Room;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.ProgressCallback;
 
 public class RoomDisplayFragment extends Fragment {
 
-    private String roomName;
-    private int roomId;
-    private String roomImageURL;
+    private static final String ARG_ROOM = "room_key";
+
+    private Room room;
 
     public RoomDisplayFragment()
     {
 
     }
 
-    public static RoomDisplayFragment newInstance(String roomName, int roomId, String roomImageURL)
+    public static RoomDisplayFragment newInstance(Room room)
     {
         RoomDisplayFragment fragment = new RoomDisplayFragment();
         Bundle args = new Bundle();
-        args.putString("roomName", roomName);
-        args.putInt("roomId", roomId);
-        args.putString("roomImageURL", roomImageURL);
+        args.putSerializable(ARG_ROOM, room);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,9 +49,7 @@ public class RoomDisplayFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null)
         {
-            roomName = getArguments().getString("roomName");
-            roomId = getArguments().getInt("roomId");
-            roomImageURL = getArguments().getString("roomImageURL");
+            room = (Room) getArguments().getSerializable(ARG_ROOM);
         }
     }
 
@@ -61,7 +58,7 @@ public class RoomDisplayFragment extends Fragment {
     {
         View rootView = inflater.inflate(R.layout.fragment_room_display, container, false);
         TextView textView = (TextView) rootView.findViewById(R.id.room_name);
-        textView.setText(roomName);
+        textView.setText(room.getRoomName());
 
         final ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
         final ImageView buildingImage = (ImageView) rootView.findViewById(R.id.building_image);
@@ -70,11 +67,9 @@ public class RoomDisplayFragment extends Fragment {
         animation.setDuration(300);
 
         // If we have a URL for the room image, load it into our imageview
-        if(roomImageURL != null) {
-            roomImageURL = "http://places.colorado.edu" + roomImageURL.replace("/images", "/images/thumbs").replace(" ", "%20");
+        if(room.getRoomName() != null) {
 
-
-            Ion.with(inflater.getContext(), roomImageURL)
+            Ion.with(inflater.getContext(), room.getRoomImageURL())
                     .progressBar(progressBar)
                     .progress(new ProgressCallback() {
                         @Override

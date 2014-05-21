@@ -8,9 +8,13 @@ package com.assettcu.placesapp.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
@@ -65,6 +69,22 @@ public class BuildingRoomsFragment extends Fragment {
         gridView = (GridView) view.findViewById(R.id.gridView1);
         adapter = new RoomsGridViewAdapter(inflater.getContext(), rooms);
         gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> av, View v, final int position, long id) {
+                Log.d("Assett", "id : " + v.getId() + "  value: " + adapter.getItem(position).getRoomName());
+                Room room = adapter.getItem(position);
+
+                RoomDisplayFragment fragment = RoomDisplayFragment.newInstance(room);
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+
+                fragmentManager.beginTransaction()
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .replace(R.id.container, fragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
         Ion.with(inflater.getContext()).load("http://places.colorado.edu/api/place/?id=" + place.getPlaceID()).asJsonObject()
                 .setCallback(new FutureCallback<JsonObject>() {

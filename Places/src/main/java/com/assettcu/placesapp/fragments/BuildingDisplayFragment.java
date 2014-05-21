@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.assettcu.placesapp.R;
 import com.assettcu.placesapp.adapters.BuildingDisplayListAdapter;
 import com.assettcu.placesapp.models.Place;
+import com.assettcu.placesapp.models.Room;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -153,8 +154,9 @@ public class BuildingDisplayFragment extends Fragment
                 int roomId = buildingInfo.getRoomId(roomName);
                 String roomImageURL = buildingInfo.getRoomImageURL(roomName);
                 Log.d("assett", "Room Name: " + roomName + " - Room ID: " + roomId);
+                Room room = new Room(roomId, roomName, roomImageURL);
 
-                RoomDisplayFragment fragment = RoomDisplayFragment.newInstance(roomName, roomId, roomImageURL);
+                RoomDisplayFragment fragment = RoomDisplayFragment.newInstance(room);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
                 fragmentManager.beginTransaction()

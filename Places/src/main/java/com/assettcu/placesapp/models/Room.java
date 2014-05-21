@@ -1,11 +1,13 @@
 package com.assettcu.placesapp.models;
 
+import java.io.Serializable;
+
 /**
  * file: Room
  * by: Derek Baumgartner
  * created: 5/19/2014.
  */
-public class Room {
+public class Room implements Serializable {
 
     private int roomId;
     private String roomName;

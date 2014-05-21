@@ -1,32 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item>
-        <shape android:shape="rectangle" >
-            <solid android:color="@color/second_grey" />
-        </shape>
-    </item>
-    <item
-        android:bottom="4dp"
-        android:left="4dp"
-        android:right="4dp"
-        android:top="4dp">
-        <shape android:shape="rectangle" >
-            <corners android:radius="3dp" />
-
-            <solid android:color="@color/card_shadow" />
-        </shape>
-    </item>
-    <item
-        android:bottom="6dp"
-        android:left="4dp"
-        android:right="4dp"
-        android:top="4dp">
-        <shape android:shape="rectangle" >
-            <corners android:radius="3dp" />
-
-            <solid android:color="@color/card_up" />
-        </shape>
-    </item>
-</layer-list>
+    <item android:drawable="@drawable/card_thin_down" android:state_checked="true"/>
+    <item android:drawable="@drawable/card_thin_down" android:state_active="true"/>
+    <item android:drawable="@drawable/card_thin_down" android:state_selected="true"/>
+    <item android:drawable="@drawable/card_thin_down" android:state_pressed="true"/>
+    <item android:drawable="@drawable/card_thin_up" android:state_pressed="false"/>
+</selector>
