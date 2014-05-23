@@ -66,6 +66,7 @@ public class RoomDisplayFragment extends Fragment {
         TextView textView = (TextView) rootView.findViewById(R.id.room_name);
         textView.setText(room.getRoomName());
         courses = (TextView) rootView.findViewById(R.id.courses);
+        container.setBackgroundColor(getResources().getColor(R.color.second_grey));
 
         final ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
         final ImageView buildingImage = (ImageView) rootView.findViewById(R.id.building_image);
@@ -87,7 +88,7 @@ public class RoomDisplayFragment extends Fragment {
                     })
                     .withBitmap()
                     .placeholder(null)
-                    .error(R.drawable.printer)   // Temporary Error drawable
+                    .error(R.drawable.no_image_available)
                     .animateLoad(animation)
                     .animateIn(animation)
                     .intoImageView(buildingImage)
@@ -99,11 +100,11 @@ public class RoomDisplayFragment extends Fragment {
                         }
                     });
         }
-        // Labs don't have images right now. So we'll use the printer as a placeholder
+        // If a room doesn't have an image, just give it the no image available drawable
         else {
             progressBar.setVisibility(View.GONE);
             buildingImage.setVisibility(View.VISIBLE);
-            buildingImage.setImageDrawable(getResources().getDrawable(R.drawable.printer));
+            buildingImage.setImageDrawable(getResources().getDrawable(R.drawable.no_image_available));
         }
 
         getCoursesJson();

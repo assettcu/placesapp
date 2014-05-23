@@ -122,7 +122,6 @@ public class WhereAmIFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Place place = adapter.getItem(position);
-                //BuildingDisplayFragment fragment = BuildingDisplayFragment.newInstance(place);
                 BuildingViewPagerFragment fragment = BuildingViewPagerFragment.newInstance(place);
 
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -293,7 +292,13 @@ public class WhereAmIFragment extends Fragment {
                     .setCallback(new FutureCallback<JsonArray>() {
                         @Override
                         public void onCompleted(Exception e, JsonArray result) {
-                            readNearestBuildingJson(result);
+                            if(result != null) {
+                                DebugMode.makeToast(getActivity(), "Downloaded nearest building JSON");
+                                readNearestBuildingJson(result);
+                            }
+                            else {
+                                DebugMode.makeToast(getActivity(), "Failed to download nearest building JSON");
+                            }
                         }
                     });
         }
@@ -319,6 +324,7 @@ public class WhereAmIFragment extends Fragment {
                 }
             }
             else {
+                DebugMode.makeToast(getActivity(), "Out of range: " + distance + " miles");
                 outOfRangeTextView.setText(R.string.out_of_range);
             }
         }
@@ -401,7 +407,11 @@ public class WhereAmIFragment extends Fragment {
 
         protected void onPostExecute(Boolean locked) {
             if(locked) {
+                DebugMode.makeToast(getActivity(), "GPS Lock successful. Accuracy: " + getLocation().getAccuracy());
                 getNearestBuildingJson();
+            }
+            else {
+                DebugMode.makeToast(getActivity(), "GPS lock failed. Accuracy: " + getLocation().getAccuracy());
             }
         }
     }

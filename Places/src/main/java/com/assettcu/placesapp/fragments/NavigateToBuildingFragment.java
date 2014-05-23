@@ -96,7 +96,7 @@ public class NavigateToBuildingFragment extends ListFragment {
         super.onListItemClick(listView, view, position, id);
 
         Place place = places.get(position);
-        BuildingDisplayFragment fragment = BuildingDisplayFragment.newInstance(place);
+        BuildingViewPagerFragment fragment = BuildingViewPagerFragment.newInstance(place);
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
