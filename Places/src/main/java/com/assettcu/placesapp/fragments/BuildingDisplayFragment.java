@@ -177,15 +177,10 @@ public class BuildingDisplayFragment extends Fragment
             JsonObject information = json.get("information").getAsJsonObject();
 
             List<String> tempInfo = new ArrayList<String>();
-            JsonElement element;
-            if (!(element = information.get("building_code")).isJsonNull())
-                tempInfo.add("<b>Building Code:</b> " + element.getAsString());
-            if (!(element = information.get("building_proctor")).isJsonNull())
-                tempInfo.add("<b>Proctor:</b> " + element.getAsString());
-            if (!(element = information.get("hours_open")).isJsonNull())
-                tempInfo.add("<b>Hours Open:</b> " + element.getAsString());
-            if (!(element = information.get("number_of_doors")).isJsonNull())
-                tempInfo.add("<b>Number of Doors:</b> " + element.getAsString());
+            tempInfo.add("<b>Building Code:</b> " + getStringFromJson(information, "building_code"));
+            tempInfo.add("<b>Proctor:</b> " + getStringFromJson(information, "building_proctor"));
+            tempInfo.add("<b>Hours Open:</b> " + getStringFromJson(information, "hours_open"));
+            tempInfo.add("<b>Number of Doors:</b> " + getStringFromJson(information, "number_of_doors"));
 
             //Add information data
             buildingInfo.setGroupData(0, tempInfo.toArray(new String[tempInfo.size()]), "Information");
@@ -211,7 +206,7 @@ public class BuildingDisplayFragment extends Fragment
                 JsonObject room = classroomsJsonArray.get(i).getAsJsonObject();
                 String roomName = room.get("placename").getAsString().toUpperCase();
                 int roomId = room.get("placeid").getAsInt();
-                String roomImageURL = room.get("path").getAsString();
+                String roomImageURL = getStringFromJson(room, "path");
                 classrooms[i] = roomName;
                 buildingInfo.addRoomId(roomName, roomId);
                 buildingInfo.addRoomImageURL(roomName, roomImageURL);
@@ -234,6 +229,19 @@ public class BuildingDisplayFragment extends Fragment
         }
 
         buildingInfo.notifyDataSetChanged();
+    }
+
+    public String getStringFromJson(JsonObject json, String memberName) {
+        JsonElement element = json.get(memberName);
+
+        // Element is not null, return the json element value
+        if(!element.isJsonNull()){
+            return element.getAsString();
+        }
+        // Element is null, return an empty string
+        else {
+            return "";
+        }
     }
 
     public void navigate()

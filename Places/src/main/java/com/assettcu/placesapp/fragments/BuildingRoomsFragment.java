@@ -23,6 +23,7 @@ import com.assettcu.placesapp.adapters.RoomsGridViewAdapter;
 import com.assettcu.placesapp.models.Place;
 import com.assettcu.placesapp.models.Room;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -107,13 +108,26 @@ public class BuildingRoomsFragment extends Fragment {
                 newRoom.setRoomName(room.get("placename").getAsString().toUpperCase());
                 newRoom.setBuildingCode(place.getBuildingCode());
                 newRoom.setRoomId(room.get("placeid").getAsInt());
-                String roomImageURL = "http://places.colorado.edu/" + room.get("path").getAsString();
+                String roomImageURL = "http://places.colorado.edu/" + getStringFromJson(room, "path");
                 roomImageURL = roomImageURL.replace("/images", "/images/thumbs");
                 newRoom.setRoomImageURL(roomImageURL);
                 adapter.addRoom(newRoom);
             }
             adapter.notifyDataSetChanged();
             adapter.print();
+        }
+    }
+
+    public String getStringFromJson(JsonObject json, String memberName) {
+        JsonElement element = json.get(memberName);
+
+        // Element is not null, return the json element value
+        if(!element.isJsonNull()){
+            return element.getAsString();
+        }
+        // Element is null, return an empty string
+        else {
+            return "";
         }
     }
 }

@@ -71,6 +71,7 @@ public class RoomsGridViewAdapter extends BaseAdapter {
         Ion.with(imageView)
                 .resize(512,512)
                 .centerCrop()
+                .error(R.drawable.no_image_available)
                 .placeholder(R.drawable.no_image_available)
                 .load(getItem(i).getRoomImageURL());
 
