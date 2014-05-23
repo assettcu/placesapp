@@ -10,10 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.assettcu.placesapp.R;
 import com.assettcu.placesapp.adapters.CourseListAdapter;
@@ -58,6 +60,15 @@ public class MyClassesFragment extends Fragment
 
         classListView = (ListView) view.findViewById(R.id.class_list);
         classListView.setAdapter(courseListAdapter);
+        classListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Should open RoomDisplayFragment when clicked. This will require some additional code.
+                // Need to know roomId, roomName, and roomImageURL before instantiating new Room.
+                // new Room(roomId, roomName, roomImageURL)
+                Toast.makeText(getActivity(), courseListAdapter.getItem(position).toString(), Toast.LENGTH_LONG).show();
+            }
+        });
 
         // Set the all checked button to change all the list items checkboxes to checked
         checkAll = (CheckBox) view.findViewById(R.id.check_all);

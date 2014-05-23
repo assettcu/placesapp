@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="second_grey">#ffeeeeee</color>
-    <color name="card_up">#ffffffff</color>
-    <color name="card_down">#f8f8f8</color>
-    <color name="card_shadow">#cccccc</color>
+    <color name="second_grey">#EEEEEE</color>
+    <color name="card_up">#FFFFFF</color>
+    <color name="card_down">#F8F8F8</color>
+    <color name="card_shadow">#CCCCCC</color>
     <color name="nav_dark_grey">#7A797A</color>
     <color name="nav_light_grey">#C5C5C5</color>
     <color name="action_bar_color">#1686AB</color>
     <color name="nav_selected">#EEEEEE</color>
+    <color name="transparent">#00000000</color>
 
     <!-- Offical CU Boulder Colors -->
     <color name="cu_gold">#CFB87C</color>

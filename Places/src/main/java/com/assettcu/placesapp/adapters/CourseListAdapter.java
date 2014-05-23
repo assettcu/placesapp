@@ -77,9 +77,9 @@ public class CourseListAdapter extends BaseAdapter implements Serializable
     }
 
     @Override
-    public Object getItem(int position)
+    public Course getItem(int position)
     {
-        return null;
+        return courses.get(position);
     }
 
     @Override

@@ -105,6 +105,7 @@ public class BuildingRoomsFragment extends Fragment {
                 newRoom = new Room();
                 JsonObject room = classroomsJsonArray.get(i).getAsJsonObject();
                 newRoom.setRoomName(room.get("placename").getAsString().toUpperCase());
+                newRoom.setBuildingCode(place.getBuildingCode());
                 newRoom.setRoomId(room.get("placeid").getAsInt());
                 String roomImageURL = "http://places.colorado.edu/" + room.get("path").getAsString();
                 roomImageURL = roomImageURL.replace("/images", "/images/thumbs");

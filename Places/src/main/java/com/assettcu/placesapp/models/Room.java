@@ -11,12 +11,14 @@ public class Room implements Serializable {
 
     private int roomId;
     private String roomName;
+    private String buildingCode;
     private String roomImageURL;
 
     public Room() {}
 
-    public Room(int roomId, String roomName, String roomImageURL) {
+    public Room(int roomId, String buildingCode, String roomName, String roomImageURL) {
         this.roomId = roomId;
+        this.buildingCode = buildingCode;
         this.roomName = roomName;
         this.roomImageURL = roomImageURL;
     }
@@ -27,6 +29,14 @@ public class Room implements Serializable {
 
     public void setRoomId(int roomId) {
         this.roomId = roomId;
+    }
+
+    public String getBuildingCode() {
+        return this.buildingCode;
+    }
+
+    public void setBuildingCode(String buildingCode) {
+        this.buildingCode = buildingCode;
     }
 
     public String getRoomName() {

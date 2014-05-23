@@ -154,7 +154,7 @@ public class BuildingDisplayFragment extends Fragment
                 int roomId = buildingInfo.getRoomId(roomName);
                 String roomImageURL = buildingInfo.getRoomImageURL(roomName);
                 Log.d("assett", "Room Name: " + roomName + " - Room ID: " + roomId);
-                Room room = new Room(roomId, roomName, roomImageURL);
+                Room room = new Room(roomId, mPlace.getBuildingCode(), roomName, roomImageURL);
 
                 RoomDisplayFragment fragment = RoomDisplayFragment.newInstance(room);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
