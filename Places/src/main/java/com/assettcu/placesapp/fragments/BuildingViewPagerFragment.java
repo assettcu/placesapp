@@ -64,7 +64,7 @@ public class BuildingViewPagerFragment extends Fragment {
         }
         View view = inflater.inflate(R.layout.fragment_building_view_pager, container, false);
         pager = (ViewPager) view.findViewById(R.id.viewPager);
-        pagerAdapter = new ViewPagerAdapter(getFragmentManager());
+        pagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
         pager.setAdapter(pagerAdapter);
         Log.d("Assett", "View Pager: onCreateView arguments: " + (getArguments() != null));
 
