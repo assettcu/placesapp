@@ -27,4 +27,15 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/pref_about_category_title"
+        android:key="pref_about">
+
+        <Preference
+            android:key="about"
+            android:title="@string/pref_about_title"
+            android:summary="@string/pref_about_summary"/>
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

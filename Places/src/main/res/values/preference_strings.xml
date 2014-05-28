@@ -8,4 +8,7 @@
     <string name="pref_view_summary">Show classroom information and pictures.</string>
     <string name="pref_beef">Order roast beef.</string>
     <string name="pref_beef_summary">It\'s really quite lovely.</string>
+    <string name="pref_about_category_title">About</string>
+    <string name="pref_about_title">Created By</string>
+    <string name="pref_about_summary">Derek, Aaron, and Ryan</string>
 </resources>
