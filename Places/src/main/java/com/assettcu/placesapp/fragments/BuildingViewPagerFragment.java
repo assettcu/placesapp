@@ -9,10 +9,8 @@ package com.assettcu.placesapp.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +26,7 @@ public class BuildingViewPagerFragment extends Fragment {
     private ViewPager pager;
     private Place mPlace;
     private ViewPagerAdapter pagerAdapter;
+    private JsonObject buildingJson;
 
     public static BuildingViewPagerFragment newInstance(Place place)
     {
@@ -61,7 +60,26 @@ public class BuildingViewPagerFragment extends Fragment {
         return view;
     }
 
+    // Finish setting up ViewPagerAdapter by setting classrooms and labs to
+    // true or false. Then set buildingJson to the newest Json.
+    public void setJson(JsonObject json, boolean classrooms, boolean labs) {
+        this.buildingJson = json;
+        pagerAdapter.setup(classrooms, labs);
+        pagerAdapter.notifyDataSetChanged();
+    }
+
+    // Returns JsonObject set by BuildingDisplayFragment
+    // May return null
+    public JsonObject getJson() {
+        return this.buildingJson;
+    }
+
     private class ViewPagerAdapter extends FragmentStatePagerAdapter {
+
+        private int pageCount = 1;
+        private boolean classrooms = false;
+        private boolean labs = false;
+        private boolean setup = false;
 
         public ViewPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -69,31 +87,41 @@ public class BuildingViewPagerFragment extends Fragment {
 
         @Override
         public CharSequence getPageTitle (int position) {
-            switch (position) {
-                case 0: return "Information";
-                case 1: return "Rooms";
-                default: return "";
-            }
+            if(position == 0)
+                return "Information";
+            else if(position == 1 && classrooms)
+                return "Classrooms";
+            else
+                return "Labs";
         }
 
         @Override
         public Fragment getItem(int position) {
-            Log.d("Assett", "View Pager: getItem: " + position);
-            switch (position) {
-                case 0: return BuildingDisplayFragment.newInstance(mPlace);
-                case 1: return BuildingRoomsFragment.newInstance(mPlace);
-                default: return PlaceholderFragment.newInstance(0);
-            }
+
+            if(position == 0)
+                return BuildingDisplayFragment.newInstance(mPlace);
+            else if(position == 1 && classrooms)
+                return BuildingRoomsFragment.newInstance(mPlace, true);
+            else
+                return BuildingRoomsFragment.newInstance(mPlace, false);
         }
 
         @Override
         public int getCount() {
-            return 2;
+            return pageCount;
         }
 
-        @Override
-        public void destroyItem(ViewGroup viewPager, int position, Object object) {
-            viewPager.removeView((View) object);
+        public void setup(boolean classrooms, boolean labs){
+            if(!setup) {
+                if (classrooms)
+                    pageCount++;
+                if (labs)
+                    pageCount++;
+
+                this.classrooms = classrooms;
+                this.labs = labs;
+                this.setup = true;
+            }
         }
     }
 }
