@@ -1,13 +1,11 @@
 package com.assettcu.placesapp.activities;
 
-import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
@@ -31,6 +29,7 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationStatusCodes;
 import com.google.gson.JsonArray;
+import com.bugsense.trace.BugSenseHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +64,7 @@ public class HomeActivity extends ActionBarActivity
 
         navigationHelper = new NavigationHelper(this);
         super.onCreate(savedInstanceState);
+        BugSenseHandler.initAndStartSession(HomeActivity.this, "bc260ea5");
         setContentView(R.layout.activity_home);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -246,6 +246,7 @@ public class HomeActivity extends ActionBarActivity
         startActivity(i);
     }
 
+    /** Never Used
     // Define a DialogFragment that displays the error dialog
     public static class ErrorDialogFragment extends DialogFragment {
         private Dialog mDialog;
@@ -257,7 +258,6 @@ public class HomeActivity extends ActionBarActivity
             mDialog = dialog;
         }
 
-        @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             return mDialog;
         }
@@ -277,6 +277,7 @@ public class HomeActivity extends ActionBarActivity
             return false;
         }
     }
+    **/
 
     @Override
     public void onLocationChanged(Location location) { }
