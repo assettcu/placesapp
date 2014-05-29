@@ -15,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 import com.assettcu.placesapp.R;
@@ -25,8 +24,6 @@ import com.assettcu.placesapp.models.Room;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.koushikdutta.async.future.FutureCallback;
-import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,18 +31,21 @@ import java.util.List;
 public class BuildingRoomsFragment extends Fragment {
 
     private static final String ARG_PLACE = "place_key";
+    private static final String ARG_ROOM = "room_key";
 
     private GridView gridView;
     private Place place;
     private RoomsGridViewAdapter adapter;
+    private boolean roomType = true;       // true = classrooms, false = labs
 
     private List<Room> rooms;
 
-    public static BuildingRoomsFragment newInstance(Place place)
+    public static BuildingRoomsFragment newInstance(Place place, boolean rootType)
     {
         BuildingRoomsFragment fragment = new BuildingRoomsFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PLACE, place);
+        args.putBoolean(ARG_ROOM, rootType);
         fragment.setArguments(args);
 
         return fragment;
@@ -59,6 +59,7 @@ public class BuildingRoomsFragment extends Fragment {
         if (getArguments() != null)
         {
             place = (Place) getArguments().getSerializable(ARG_PLACE);
+            roomType = (Boolean) getArguments().getSerializable(ARG_ROOM);
         }
     }
 
@@ -87,34 +88,33 @@ public class BuildingRoomsFragment extends Fragment {
             }
         });
 
-        Ion.with(inflater.getContext()).load("http://places.colorado.edu/api/place/?id=" + place.getPlaceID()).asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        readJson(result);
-                    }
-                });
-
+        parseJson();
         return view;
     }
 
-    public void readJson(JsonObject json) {
-        if (json.has("classrooms")) {
-            JsonArray classroomsJsonArray = json.get("classrooms").getAsJsonArray();
-            Room newRoom;
-            for (int i = 0; i < classroomsJsonArray.size(); i++) {
-                newRoom = new Room();
-                JsonObject room = classroomsJsonArray.get(i).getAsJsonObject();
-                newRoom.setRoomName(room.get("placename").getAsString().toUpperCase());
-                newRoom.setBuildingCode(place.getBuildingCode());
-                newRoom.setRoomId(room.get("placeid").getAsInt());
-                String roomImageURL = "http://places.colorado.edu/" + getStringFromJson(room, "path");
-                roomImageURL = roomImageURL.replace("/images", "/images/thumbs");
-                newRoom.setRoomImageURL(roomImageURL);
-                adapter.addRoom(newRoom);
+    public void parseJson(){
+        Fragment parent = getParentFragment();
+        if(parent instanceof BuildingViewPagerFragment) {
+            JsonObject json = ((BuildingViewPagerFragment) parent).getJson();
+
+            String jsonName = (roomType) ? "classrooms" : "labs";
+
+            if (json.has(jsonName)) {
+                JsonArray classroomsJsonArray = json.get(jsonName).getAsJsonArray();
+                Room newRoom;
+                for (int i = 0; i < classroomsJsonArray.size(); i++) {
+                    newRoom = new Room();
+                    JsonObject room = classroomsJsonArray.get(i).getAsJsonObject();
+                    newRoom.setRoomName(room.get("placename").getAsString().toUpperCase());
+                    newRoom.setBuildingCode(place.getBuildingCode());
+                    newRoom.setRoomId(room.get("placeid").getAsInt());
+                    String roomImageURL = "http://places.colorado.edu/" + getStringFromJson(room, "path");
+                    roomImageURL = roomImageURL.replace("/images", "/images/thumbs");
+                    newRoom.setRoomImageURL(roomImageURL);
+                    adapter.addRoom(newRoom);
+                }
+                adapter.notifyDataSetChanged();
             }
-            adapter.notifyDataSetChanged();
-            adapter.print();
         }
     }
 

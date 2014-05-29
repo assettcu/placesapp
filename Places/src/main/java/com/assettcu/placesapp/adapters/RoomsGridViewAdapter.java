@@ -1,7 +1,6 @@
 package com.assettcu.placesapp.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,13 +33,6 @@ public class RoomsGridViewAdapter extends BaseAdapter {
 
     public void addRoom(Room room) {
             rooms.add(room);
-    }
-
-    public void print(){
-        for(int i = 0; i < rooms.size(); i++)
-        {
-            Log.d("Assett", "Room: " + rooms.get(i));
-        }
     }
 
     @Override

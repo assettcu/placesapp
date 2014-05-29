@@ -44,6 +44,7 @@ public class BuildingDisplayFragment extends Fragment
     private OnFragmentInteractionListener mListener;
     private BuildingDisplayListAdapter buildingInfo;
     private ExpandableListView expandableListView;
+    private JsonObject buildingJson;
 
     /**
      * Use this factory method to create a new instance of
@@ -94,6 +95,7 @@ public class BuildingDisplayFragment extends Fragment
         mBuildingURL = mBuildingURL.replace("/images", "/images/thumbs").replace(" ", "%20");
 
         // Get Building Image
+        Log.d("Assett", "Ion: Requesting Building Image");
         Ion.with(inflater.getContext(), mBuildingURL)
                 .progressBar(progressBar)
                 .progress(new ProgressCallback() {
@@ -116,15 +118,6 @@ public class BuildingDisplayFragment extends Fragment
                     {
                         progressBar.setVisibility(View.GONE);
                         buildingImage.setVisibility(View.VISIBLE);
-                    }
-                });
-
-        // Get Building Metadata
-        Ion.with(inflater.getContext()).load("http://places.colorado.edu/api/place/?id=" + mPlace.getPlaceID()).asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        readMetadataJson(result);
                     }
                 });
 
@@ -169,10 +162,34 @@ public class BuildingDisplayFragment extends Fragment
             }
         });
 
+        // Get Building Metadata
+        // Prevent multiple HTTP requests by checking to see if the Json is already available
+        Fragment parent = getParentFragment();
+        if(parent instanceof BuildingViewPagerFragment) {
+            buildingJson = ((BuildingViewPagerFragment) parent).getJson();
+        }
+
+        if(buildingJson == null || buildingJson.isJsonNull()) {
+            Log.d("Assett", "Ion: Requesting Building JSON");
+            Ion.with(inflater.getContext()).load("http://places.colorado.edu/api/place/?id=" + mPlace.getPlaceID()).asJsonObject()
+                    .setCallback(new FutureCallback<JsonObject>() {
+                        @Override
+                        public void onCompleted(Exception e, JsonObject result) {
+                            readMetadataJson(result);
+                        }
+                    });
+        }
+        else {
+            readMetadataJson(buildingJson);
+        }
+
         return view;
     }
 
     public void readMetadataJson(JsonObject json) {
+        boolean hasClassrooms = false;
+        boolean hasLabs = false;
+
         if (json.has("information")) {
             JsonObject information = json.get("information").getAsJsonObject();
 
@@ -201,6 +218,10 @@ public class BuildingDisplayFragment extends Fragment
         // Add classroom data
         if (json.has("classrooms")) {
             JsonArray classroomsJsonArray = json.get("classrooms").getAsJsonArray();
+
+            if(classroomsJsonArray.size() > 0)
+                hasClassrooms = true;
+
             String[] classrooms = new String[classroomsJsonArray.size()];
             for (int i = 0; i < classroomsJsonArray.size(); i++) {
                 JsonObject room = classroomsJsonArray.get(i).getAsJsonObject();
@@ -216,16 +237,25 @@ public class BuildingDisplayFragment extends Fragment
 
         // Add labs data
         if (json.has("labs")) {
-            JsonArray classroomsJsonArray = json.get("labs").getAsJsonArray();
-            String[] labs = new String[classroomsJsonArray.size()];
-            for (int i = 0; i < classroomsJsonArray.size(); i++) {
-                JsonObject room = classroomsJsonArray.get(i).getAsJsonObject();
+            JsonArray labsJsonArray = json.get("labs").getAsJsonArray();
+
+            if(labsJsonArray.size() > 0)
+                hasLabs = true;
+
+            String[] labs = new String[labsJsonArray.size()];
+            for (int i = 0; i < labsJsonArray.size(); i++) {
+                JsonObject room = labsJsonArray.get(i).getAsJsonObject();
                 String roomName = room.get("placename").getAsString().toUpperCase();
                 int roomId = room.get("placeid").getAsInt();
                 labs[i] = roomName;
                 buildingInfo.addRoomId(roomName, roomId);
             }
             buildingInfo.setGroupData(3, labs, "Labs (" + labs.length + ")");
+        }
+
+        Fragment parent = getParentFragment();
+        if(parent instanceof BuildingViewPagerFragment) {
+            ((BuildingViewPagerFragment) parent).setJson(json, hasClassrooms, hasLabs);
         }
 
         buildingInfo.notifyDataSetChanged();
