@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">Places</string>
+    <string name="app_version_name">0.1a</string>
     <string name="title_section1">Home</string>
     <string name="title_section2">Navigate to Building</string>
     <string name="title_section3">I Need...</string>

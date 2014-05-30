@@ -9,6 +9,12 @@
             android:title="@string/pref_debug_option"
             android:key="pref_key_debug_toggle"/>
 
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:title="@string/pref_crash_reports_title"
+            android:summary="@string/pref_crash_reports_summary"
+            android:key="pref_key_crash_reports"/>
+
         </PreferenceCategory>
 
     <PreferenceCategory
@@ -20,11 +26,6 @@
             android:key="pref_key_class_view"
             android:summary="@string/pref_view_summary"/>
 
-        <CheckBoxPreference
-            android:title="@string/pref_beef"
-            android:key="pref_key_beef"
-            android:summary="@string/pref_beef_summary"/>
-
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -33,8 +34,15 @@
 
         <Preference
             android:key="about"
+            android:selectable="false"
             android:title="@string/pref_about_title"
             android:summary="@string/pref_about_summary"/>
+
+        <Preference
+            android:key="about"
+            android:selectable="false"
+            android:title="Version"
+            android:summary="@string/app_version_name"/>
 
     </PreferenceCategory>
 

@@ -3,14 +3,17 @@ package com.assettcu.placesapp.activities;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -61,10 +64,17 @@ public class HomeActivity extends ActionBarActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         navigationHelper = new NavigationHelper(this);
         super.onCreate(savedInstanceState);
-        BugSenseHandler.initAndStartSession(HomeActivity.this, "bc260ea5");
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean crashReports = prefs.getBoolean("pref_key_crash_reports", true);
+
+        if(crashReports){
+            BugSenseHandler.initAndStartSession(HomeActivity.this, "bc260ea5");
+            DebugMode.makeToast(this, "Bugsense crash reports enabled");
+        }
+
         setContentView(R.layout.activity_home);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources>
-    <string name="pref_debug_option">Turn debugging on.</string>
+    <string name="pref_debug_option">Enable debugging</string>
     <string name="pref_debug_title">Debugging</string>
     <string name="pref_view_title">Classroom View</string>
-    <string name="pref_view_option">Use expanded mode.</string>
-    <string name="pref_view_summary">Show classroom information and pictures.</string>
-    <string name="pref_beef">Order roast beef.</string>
-    <string name="pref_beef_summary">It\'s really quite lovely.</string>
+    <string name="pref_view_option">Expanded view</string>
+    <string name="pref_view_summary">Display classrooms as grid of pictures</string>
+    <string name="pref_crash_reports_title">Submit crash reports</string>
+    <string name="pref_crash_reports_summary">Allow this app to submit anonymous crash reports</string>
     <string name="pref_about_category_title">About</string>
     <string name="pref_about_title">Created By</string>
     <string name="pref_about_summary">Derek, Aaron, and Ryan</string>
